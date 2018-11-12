@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Income" do
-  describe "POST /income" do
+  describe "POST /v1/income" do
     it "saves the income per pay period" do
       expect {
         post v1_income_path, params: {
@@ -10,10 +10,11 @@ RSpec.describe "Income" do
           },
         }
       }.to change {
-        Income.count
+        V1::Income.count
       }.from(0).to(1)
 
       expect(response.status).to eq(201)
+      expect(JSON.parse(response.body)['data']['id']).not_to be_nil
     end
   end
 

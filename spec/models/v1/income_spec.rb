@@ -1,5 +1,5 @@
 require 'rails_helper'
 
-RSpec.describe Income, type: :model do
+RSpec.describe V1::Income, type: :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end

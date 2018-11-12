@@ -1,16 +1,16 @@
 class V1::IncomesController < ApplicationController
   def create
-    Income.create!(income_params)
-    head 201
+    income = V1::Income.create!(income_params)
+    render json: V1::IncomeSerializer.new(income).serialized_json, status: :created
   end
 
   def show
-    income = Income.last
-    render json: IncomeSerializer.new(income).serialized_json
+    income = V1::Income.last
+    render json: V1::IncomeSerializer.new(income).serialized_json
   end
 
   def update
-    Income.last.update(income_params)
+    V1::Income.last.update(income_params)
     head 204
   end
 
