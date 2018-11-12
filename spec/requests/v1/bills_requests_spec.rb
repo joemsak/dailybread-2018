@@ -47,6 +47,31 @@ RSpec.describe "Bills" do
       expect(json.count).to be 1
       expect(json[0]['id']).to eq(String(bill.id))
     end
+
+    it "retrieves all bills in the current period" do
+      bill2 = FactoryBot.create(:bill, pay_period: 2)
+      bill1 = FactoryBot.create(:bill, pay_period: 1)
+
+      Timecop.freeze(Date.new(2019, 6, 14)) do
+        get v1_bills_path, params: {
+          pay_period: :current
+        }
+      end
+
+      json = JSON.parse(response.body)['data']
+      expect(json.count).to be 1
+      expect(json[0]['id']).to eq(String(bill2.id))
+
+      Timecop.freeze(Date.new(2019, 6, 28)) do
+        get v1_bills_path, params: {
+          pay_period: :current
+        }
+      end
+
+      json = JSON.parse(response.body)['data']
+      expect(json.count).to be 1
+      expect(json[0]['id']).to eq(String(bill1.id))
+    end
   end
 
   describe "GET /v1/bills/:id" do
