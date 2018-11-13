@@ -1,6 +1,11 @@
 class V1::BillsController < ApplicationController
   def index
-    bills = V1::Bill.in_pay_period(params.fetch(:pay_period))
+    if params[:pay_period]
+      bills = V1::Bill.in_pay_period(params[:pay_period])
+    else
+      bills = V1::Bill.all
+    end
+
     render json: V1::BillSerializer.new(bills).serialized_json
   end
 

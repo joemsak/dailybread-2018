@@ -19,4 +19,12 @@ class V1::PayPeriod
       2
     end
   end
+
+  def id
+    SecureRandom.hex(12)
+  end
+
+  def current
+    self.class.current
+  end
 end

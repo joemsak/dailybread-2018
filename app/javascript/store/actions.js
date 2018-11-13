@@ -1,7 +1,10 @@
 import Api from 'utils/api'
 
 export default {
-  initIncome ({ commit }) {
+  initApp ({ commit }) {
+    Api.get("/current_pay_period")
+      .then(({ data }) => commit('currentPayPeriod', data.attributes.current))
+
     Api.get("/income")
       .then(({ data }) => {
         if (data) {
@@ -11,10 +14,22 @@ export default {
           commit('incomePerPeriod', { id: null, amount: 0 })
         }
       })
+
+    Api.get(`/bills`)
+      .then(({ data }) => {
+        for (const { id, attributes } of data) {
+          commit('bills', { id, ...attributes })
+        }
+      })
   },
 
   updateIncome ({ commit }, payload) {
     Api.patch("/income", payload)
       .then(() => commit('incomePerPeriod', payload))
+  },
+
+  createBill ({ commit }, payload) {
+    Api.post('/bills', payload)
+      .then(({ data: { id, attributes } }) => commit('bills', { id, ...attributes }))
   }
 }

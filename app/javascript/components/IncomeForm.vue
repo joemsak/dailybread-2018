@@ -1,23 +1,35 @@
 <template>
   <form @submit.prevent>
     <label for="incomePerPeriod">Income per pay period</label>
-    <input
-      id="incomePerPeriod"
-      type="number"
-      @focus="$event.target.select()"
-      v-model="amount"
-    />
 
-    <button type="submit">Save</button>
+    <div v-if="editingAmount">
+      <input
+        id="incomePerPeriod"
+        type="number"
+        @focus="$event.target.select()"
+        v-model="amount"
+      />
+
+      <button @click.prevent="editingAmount = false">Save</button>
+    </div>
+
+    <div v-else>
+      {{ amount }}
+      <a href="#" @click.prevent="editingAmount = true">edit</a>
+    </div>
   </form>
 </template>
 
 <script>
-  import Vue from 'vue'
-
   import { mapState, mapActions } from 'vuex'
 
   export default {
+    data () {
+      return {
+        editingAmount: false,
+      }
+    },
+
     computed: {
       ...mapState(['incomePerPeriod']),
 
@@ -27,10 +39,6 @@
       }
     },
 
-    methods: mapActions(['initIncome', 'updateIncome']),
-
-    created () {
-      this.initIncome()
-    }
+    methods: mapActions(['updateIncome']),
   }
 </script>
