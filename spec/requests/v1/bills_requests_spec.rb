@@ -19,6 +19,25 @@ RSpec.describe "Bills" do
       json = JSON.parse(response.body)['data']
       expect(json['id']).not_to be_nil
     end
+
+    it "saves bills with 'current' pay_period" do
+      Timecop.freeze(Date.new(2018, 11, 15)) do
+        expect {
+          post v1_bills_path, params: {
+            bill: {
+              name: "Rent",
+              pay_period: "current",
+              amount: 350
+            },
+          }
+        }.to change {
+          V1::Bill.count
+        }.from(0).to(1)
+      end
+
+      json = JSON.parse(response.body)['data']
+      expect(json['attributes']['payPeriod']).to eq(2)
+    end
   end
 
   describe "GET /v1/bills?pay_period=:period" do
@@ -85,7 +104,7 @@ RSpec.describe "Bills" do
 
       expect(json['id']).to eq(String(bill.id))
       expect(attrs['amount']).to eq(350)
-      expect(attrs['pay_period']).to eq(2)
+      expect(attrs['payPeriod']).to eq(2)
       expect(attrs['name']).to eq("Rent")
     end
   end

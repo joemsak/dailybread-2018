@@ -6,4 +6,10 @@ class V1::Bill < ApplicationRecord
 
     where(pay_period: num)
   }
+
+  before_save -> {
+    if pay_period.to_i.zero?
+      self.pay_period = V1::PayPeriod.current
+    end
+  }
 end

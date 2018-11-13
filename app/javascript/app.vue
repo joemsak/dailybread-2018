@@ -2,20 +2,26 @@
   <div id="app">
     <p>Dailybread</p>
 
-    <form @submit.prevent="handleIncomeSubmit">
-      <label for="incomePerPeriod">Income per pay period</label>
-      <input id="incomePerPeriod" type="number" @focus="$event.target.select()" v-model="incomePerPeriod.amount" />
-      <button type="submit">Save</button>
-    </form>
+    <IncomeForm />
 
     <p>{{ totalAfterBills }}</p>
 
     <form @submit.prevent="addNewBill">
       <label for="billEntry">Enter bills:</label>
-      <input id="billEntry" type="number" @focus="$event.target.select()" v-model.number="newBillAmount" />
+      <input
+        id="billEntry"
+        type="number"
+        @focus="$event.target.select()"
+        v-model.number="newBillAmount"
+      />
 
       <label for="billEntryName">Name:</label>
-      <input id="billEntryName" type="text" @focus="$event.target.select()" v-model="newBillName" />
+      <input
+        id="billEntryName"
+        type="text"
+        @focus="$event.target.select()"
+        v-model="newBillName"
+      />
 
       <button type="submit">Add</button>
     </form>
@@ -30,16 +36,22 @@
 
 <script>
 import Vue from 'vue'
-import Api from './utils/api'
+import IncomeForm from 'components/IncomeForm'
+import Api from 'utils/api'
+
+import { mapState } from 'vuex'
 
 export default {
   data () {
     return {
-      incomePerPeriod: {},
       bills: [],
       newBillAmount: 0,
       newBillName: ''
     }
+  },
+
+  components: {
+    IncomeForm,
   },
 
   methods: {
@@ -48,7 +60,7 @@ export default {
         "bill": {
           "name": this.newBillName,
           "amount": this.newBillAmount,
-          "pay_period": 1
+          "pay_period": "current"
         }
       }
 
@@ -79,6 +91,8 @@ export default {
   },
 
   computed: {
+    ...mapState(['incomePerPeriod']),
+
     totalAfterBills () {
       return this.incomePerPeriod.amount - this.sumOfBills
     },
@@ -89,19 +103,7 @@ export default {
   },
 
   created () {
-    Api.get("/income")
-      .then(({ data }) => {
-        if (data) {
-          const { id, attributes } = data
-          Vue.set(this.incomePerPeriod, 'id', id)
-          Vue.set(this.incomePerPeriod, 'amount', attributes.amount)
-        } else {
-          Vue.set(this.incomePerPeriod, 'id', null)
-          Vue.set(this.incomePerPeriod, 'amount', 0)
-        }
-      })
-
-    Api.get("/bills?pay_period=1")
+    Api.get("/bills?pay_period=current")
       .then(({ data }) => {
         for (const { id, attributes } of data) {
           this.bills.push({
@@ -115,7 +117,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 label {
   display: block;
   cursor: pointer;
