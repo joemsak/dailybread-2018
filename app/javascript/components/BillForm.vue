@@ -1,31 +1,33 @@
 <template>
-  <form @submit.prevent="addNewBill">
-    <label for="billEntryPayPeriod">During pay period:</label>
-    <select
-      id="billEntryPayPeriod"
-      v-model.number="newBillPayPeriod"
-    >
-      <option value="1">First pay period</option>
-      <option value="2">Second pay period</option>
-    </select>
+  <form @submit.prevent="addNewBill" class="grid">
+    <div class="col-12">
+      <label for="billEntryPayPeriod">During pay period:</label>
+      <select
+        id="billEntryPayPeriod"
+        v-model.number="newBillPayPeriod"
+      >
+        <option value="1">First pay period</option>
+        <option value="2">Second pay period</option>
+      </select>
 
-    <label for="billEntryAmount">Enter bills:</label>
-    <input
-      id="billEntryAmount"
-      type="number"
-      @focus="$event.target.select()"
-      v-model.number="newBillAmount"
-    />
+      <label for="billEntryName">Name:</label>
+      <input
+        type="text"
+        id="billEntryName"
+        ref="billEntryName"
+        @focus="$event.target.select()"
+        v-model="newBillName"
+      />
 
-    <label for="billEntryName">Name:</label>
-    <input
-      id="billEntryName"
-      type="text"
-      @focus="$event.target.select()"
-      v-model="newBillName"
-    />
-
-    <button type="submit">Add</button>
+      <label for="billEntryAmount">Amount:</label>
+      <input
+        id="billEntryAmount"
+        type="number"
+        @focus="$event.target.select()"
+        v-model.number="newBillAmount"
+      />
+      <button type="submit">Add</button>
+    </div>
   </form>
 </template>
 
@@ -39,19 +41,11 @@ export default {
     return {
       newBillAmount: null,
       newBillName: '',
-      mutableNewBillPayPeriod: null,
+      newBillPayPeriod: null,
     }
   },
 
-  computed: {
-    ...mapState(['currentPayPeriod']),
-
-    newBillPayPeriod: {
-      get () { return this.currentPayPeriod },
-      set (value) { this.mutableNewBillPayPeriod = value }
-    },
-
-  },
+  computed: mapState(['currentPayPeriod']),
 
   methods: {
     ...mapActions(['createBill']),
@@ -61,16 +55,20 @@ export default {
         "bill": {
           "name": this.newBillName,
           "amount": this.newBillAmount,
-          "pay_period": this.mutableNewBillPayPeriod,
+          "pay_period": this.newBillPayPeriod,
         }
       }
 
       this.createBill(payload).then(() => {
         this.newBillName = ''
         this.newBillAmount = null
-        this.mutableNewBillPayPeriod = null
+        this.$refs.billEntryName.focus()
       })
     },
   },
+
+  mounted () {
+    this.newBillPayPeriod = this.currentPayPeriod
+  }
 }
 </script>

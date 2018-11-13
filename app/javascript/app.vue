@@ -1,14 +1,8 @@
 <template>
-  <div id="app">
+  <div id="app" class="container">
     <h1>Dailybread</h1>
 
     <IncomeForm />
-
-    <h3>
-      Amount remaining after bills &amp; expenses:
-      {{ totalAfterBills }}
-    </h3>
-
     <BillForm />
     <BillsList />
   </div>
@@ -36,31 +30,8 @@ export default {
     ...mapActions(['initApp']),
   },
 
-  computed: {
-    ...mapState(['incomePerPeriod', 'currentPayPeriod', 'firstPeriodBills', 'secondPeriodBills']),
-
-    totalAfterBills () {
-      return this.incomePerPeriod.amount - this.sumOfBills
-    },
-
-    sumOfBills () {
-      if (this.currentPayPeriod == 1) {
-        return this.firstPeriodBills.reduce((sum, b) => sum + b.amount, 0)
-      } else {
-        return this.secondPeriodBills.reduce((sum, b) => sum + b.amount, 0)
-      }
-    },
-  },
-
   created () {
     this.initApp()
   }
 }
 </script>
-
-<style>
-label {
-  display: block;
-  cursor: pointer;
-}
-</style>

@@ -1,21 +1,23 @@
 <template>
-  <form @submit.prevent>
-    <label for="incomePerPeriod">Income per pay period</label>
+  <form @submit.prevent class="grid">
+    <div class="col-12">
+      <label for="incomePerPeriod">Income per pay period</label>
 
-    <div v-if="editingAmount">
-      <input
-        id="incomePerPeriod"
-        type="number"
-        @focus="$event.target.select()"
-        v-model="amount"
-      />
+      <div v-if="editingAmount">
+        <input
+          id="incomePerPeriod"
+          type="number"
+          @focus="$event.target.select()"
+          v-model="amount"
+        />
 
-      <button @click.prevent="editingAmount = false">Save</button>
-    </div>
+        <button @click.prevent="editingAmount = false">Save</button>
+      </div>
 
-    <div v-else>
-      {{ amount }}
-      <a href="#" @click.prevent="editingAmount = true">edit</a>
+      <div v-else>
+        {{ amount }}
+        <a href="#" @click.prevent="editingAmount = true">edit</a>
+      </div>
     </div>
   </form>
 </template>
