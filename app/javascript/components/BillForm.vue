@@ -55,7 +55,7 @@
 
     <p class="mt-3">
       <strong>Amount remaining:</strong>
-      {{ totalAfterBillsAndExpenses({ period: 2 }) | currency }}
+      {{ totalAfterBillsAndExpenses | currency }}
     </p>
   </form>
 </template>
@@ -80,6 +80,19 @@ export default {
       get() { return this.$store.state.currentPayPeriod },
       set(value) { this.$store.commit('currentPayPeriod', value) }
     },
+
+    totalAfterBillsAndExpenses () {
+      let sum
+
+      if (this.currentPayPeriod == 1) {
+        sum = this.calculateSum(this.firstPeriodBills)
+      } else {
+        sum = this.calculateSum(this.secondPeriodBills)
+      }
+
+      return this.incomePerPeriod.amount - sum
+    },
+
   },
 
   methods: {
@@ -107,18 +120,6 @@ export default {
       searchParams.set("payPeriod", value)
       const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString()
       history.pushState(null, '', newRelativePathQuery)
-    },
-
-    totalAfterBillsAndExpenses (options) {
-      let sum
-
-      if (options.period == 1) {
-        sum = this.calculateSum(this.firstPeriodBills)
-      } else {
-        sum = this.calculateSum(this.secondPeriodBills)
-      }
-
-      return this.incomePerPeriod.amount - sum
     },
 
     calculateSum (bills) {
