@@ -1,33 +1,62 @@
 <template>
-  <form @submit.prevent="addNewBill" class="grid">
-    <div class="col-12">
-      <label for="billEntryPayPeriod">During pay period:</label>
-      <select
-        id="billEntryPayPeriod"
-        v-model.number="newBillPayPeriod"
-      >
-        <option value="1">First pay period</option>
-        <option value="2">Second pay period</option>
-      </select>
+  <form @submit.prevent="addNewBill">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+      <label :class="['btn', 'btn-secondary', currentPayPeriod == 1 ? 'active' : '']">
+        <input
+          type="radio"
+          name="selectPayPeriod"
+          id="selectPayPeriod1"
+          autocomplete="off"
+          checked="currentPayPeriod == 1"
+          @click="setCurrentPayPeriod(1)"
+        >
+        1<sup>st</sup> Pay Period
+      </label>
 
+      <label :class="['btn', 'btn-secondary', currentPayPeriod == 2 ? 'active' : '']">
+        <input
+          type="radio"
+          name="selectPayPeriod"
+          id="selectPayPeriod2"
+          autocomplete="off"
+          checked="currentPayPeriod == 2"
+          @click="setCurrentPayPeriod(2)"
+        >
+        2<sup>nd</sup> Pay Period
+      </label>
+    </div>
+
+    <h4 class="mt-3">Add a new bill</h4>
+
+    <div class="form-group">
       <label for="billEntryName">Name:</label>
       <input
         type="text"
         id="billEntryName"
         ref="billEntryName"
+        class="form-control"
         @focus="$event.target.select()"
         v-model="newBillName"
       />
+    </div>
 
+    <div class="form-group">
       <label for="billEntryAmount">Amount:</label>
       <input
         id="billEntryAmount"
         type="number"
+        class="form-control"
         @focus="$event.target.select()"
         v-model.number="newBillAmount"
       />
-      <button type="submit">Add</button>
     </div>
+
+    <button type="submit" class="btn btn-primary">Add</button>
+
+    <p class="mt-3">
+      <strong>Amount remaining:</strong>
+      {{ totalAfterBillsAndExpenses({ period: 2 }) | currency }}
+    </p>
   </form>
 </template>
 
@@ -41,11 +70,17 @@ export default {
     return {
       newBillAmount: null,
       newBillName: '',
-      newBillPayPeriod: null,
     }
   },
 
-  computed: mapState(['currentPayPeriod']),
+  computed: {
+    ...mapState(['incomePerPeriod', 'firstPeriodBills', 'secondPeriodBills']),
+
+    currentPayPeriod: {
+      get() { return this.$store.state.currentPayPeriod },
+      set(value) { this.$store.commit('currentPayPeriod', value) }
+    },
+  },
 
   methods: {
     ...mapActions(['createBill']),
@@ -55,7 +90,7 @@ export default {
         "bill": {
           "name": this.newBillName,
           "amount": this.newBillAmount,
-          "pay_period": this.newBillPayPeriod,
+          "pay_period": this.currentPayPeriod,
         }
       }
 
@@ -65,10 +100,30 @@ export default {
         this.$refs.billEntryName.focus()
       })
     },
-  },
 
-  mounted () {
-    this.newBillPayPeriod = this.currentPayPeriod
-  }
+    setCurrentPayPeriod (value) {
+      this.currentPayPeriod = value
+      let searchParams = new URLSearchParams(window.location.search)
+      searchParams.set("payPeriod", value)
+      const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString()
+      history.pushState(null, '', newRelativePathQuery)
+    },
+
+    totalAfterBillsAndExpenses (options) {
+      let sum
+
+      if (options.period == 1) {
+        sum = this.calculateSum(this.firstPeriodBills)
+      } else {
+        sum = this.calculateSum(this.secondPeriodBills)
+      }
+
+      return this.incomePerPeriod.amount - sum
+    },
+
+    calculateSum (bills) {
+      return bills.reduce((sum, b) => sum + b.amount, 0)
+    },
+  },
 }
 </script>

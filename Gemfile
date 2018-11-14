@@ -15,6 +15,8 @@ gem 'versionist'
 gem 'fast_jsonapi'
 gem 'jwt'
 
+gem 'bootstrap', '~> 4.1.3'
+
 gem 'holidays'
 
 gem 'bootsnap', '>= 1.1.0', require: false

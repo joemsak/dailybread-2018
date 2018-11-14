@@ -1,24 +1,23 @@
 <template>
-  <form @submit.prevent class="grid">
-    <div class="col-12">
-      <label for="incomePerPeriod">Income per pay period</label>
+  <form @submit.prevent>
+    <label for="incomePerPeriod">Income per pay period</label>
 
-      <div v-if="editingAmount">
-        <input
-          id="incomePerPeriod"
-          type="number"
-          @focus="$event.target.select()"
-          v-model="amount"
-        />
+    <div v-if="editingAmount" class="form-group">
+      <input
+        id="incomePerPeriod"
+        type="number"
+        class="form-control"
+        @focus="$event.target.select()"
+        v-model="amount"
+      />
 
-        <button @click.prevent="editingAmount = false">Save</button>
-      </div>
-
-      <div v-else>
-        {{ amount }}
-        <a href="#" @click.prevent="editingAmount = true">edit</a>
-      </div>
+      <button @click.prevent="editingAmount = false" class="btn btn-primary">Save</button>
     </div>
+
+    <p v-else>
+      {{ amount | currency }}
+      <a href="#" @click.prevent="editingAmount = true">edit</a>
+    </p>
   </form>
 </template>
 
@@ -44,3 +43,12 @@
     methods: mapActions(['updateIncome']),
   }
 </script>
+
+<style lang="scss" scoped>
+input, select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  margin: 0.5rem 0 1rem;
+}
+</style>

@@ -1,33 +1,43 @@
 <template>
   <div class="grid">
-    <div class="col-6">
-      <h2>First period bills</h2>
+    <div class="col-12" v-if="currentPayPeriod == 1">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Bill name</th>
+            <th>Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
 
-      <h3>
-        Amount remaining after bills &amp; expenses:
-        {{ totalAfterBillsAndExpenses({ period: 1 }) }}
-      </h3>
-
-      <ul class="list-style--none margin--none padding--none">
-        <li v-for="bill in firstPeriodBills" :key="bill.id">
-          {{ bill.name }} – {{ bill.amount }}
-        </li>
-      </ul>
+        <tbody>
+          <tr v-for="bill in firstPeriodBills" :key="bill.id">
+            <td>{{ bill.name }}</td>
+            <td>{{ bill.amount | currency }}</td>
+            <td>edit / delete...</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="col-6">
-      <h2>Second period bills</h2>
+    <div class="col-12" v-else>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Bill name</th>
+            <th>Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
 
-      <h3>
-        Amount remaining after bills &amp; expenses:
-        {{ totalAfterBillsAndExpenses({ period: 2 }) }}
-      </h3>
-
-      <ul class="list-style--none margin--none padding--none">
-        <li v-for="bill in secondPeriodBills" :key="bill.id">
-          {{ bill.name }} – {{ bill.amount }}
-        </li>
-      </ul>
+        <tbody>
+          <tr v-for="bill in secondPeriodBills" :key="bill.id">
+            <td>{{ bill.name }}</td>
+            <td>{{ bill.amount | currency }}</td>
+            <td>edit / delete...</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -36,24 +46,6 @@
 import { mapState } from 'vuex'
 
 export default {
-  computed: mapState(['incomePerPeriod', 'firstPeriodBills', 'secondPeriodBills']),
-
-  methods: {
-    totalAfterBillsAndExpenses (options) {
-      let sum
-
-      if (options.period == 1) {
-        sum = this.calculateSum(this.firstPeriodBills)
-      } else {
-        sum = this.calculateSum(this.secondPeriodBills)
-      }
-
-      return this.incomePerPeriod.amount - sum
-    },
-
-    calculateSum (bills) {
-      return bills.reduce((sum, b) => sum + b.amount, 0)
-    },
-  },
+  computed: mapState(['currentPayPeriod', 'firstPeriodBills', 'secondPeriodBills']),
 }
 </script>

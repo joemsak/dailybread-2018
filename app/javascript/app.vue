@@ -1,15 +1,25 @@
 <template>
-  <div id="app" class="container">
-    <h1>Dailybread</h1>
+  <div id="app" class="container-fluid">
+    <div class="row">
+      <div class="col-8">
+        <h3>Dailybread</h3>
+        <h4>&#127838; Know Your Dough</h4>
+        <BillsList />
+      </div>
 
-    <IncomeForm />
-    <BillForm />
-    <BillsList />
+      <div class="col-4 pt-3">
+        <IncomeForm />
+        <BillForm />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
+import Vue2Filters from 'vue2-filters'
+
+Vue.use(Vue2Filters)
 
 import IncomeForm from 'components/IncomeForm'
 import BillForm from 'components/BillForm'

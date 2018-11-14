@@ -2,8 +2,14 @@ import Api from 'utils/api'
 
 export default {
   initApp ({ commit }) {
-    Api.get("/current_pay_period")
-      .then(({ data }) => commit('currentPayPeriod', data.attributes.current))
+    const payPeriod = window.location.search.match(/payPeriod=(\d)/)[1]
+
+    if (payPeriod) {
+      commit('currentPayPeriod', parseInt(payPeriod))
+    } else {
+      Api.get("/current_pay_period")
+        .then(({ data }) => commit('currentPayPeriod', data.attributes.current))
+    }
 
     Api.get("/income")
       .then(({ data }) => {
