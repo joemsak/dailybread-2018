@@ -13,9 +13,15 @@
         <td>{{ bill.name }}</td>
         <td>{{ bill.amount | currency }}</td>
         <td>
-          <a href="#" @click.prevent="editBill(bill)">
-            edit
-          </a> / delete...
+          <small>
+            <a href="#" @click.prevent="editBill(bill)">
+              edit
+            </a>
+            &nbsp;|&nbsp;
+            <a href="#" class="text-danger" @click.prevent="deleteBill(bill)">
+              delete
+            </a>
+          </small>
         </td>
       </tr>
     </tbody>
@@ -34,6 +40,6 @@ export default {
     },
   },
 
-  methods: mapActions(['editBill']),
+  methods: mapActions(['editBill', 'deleteBill']),
 }
 </script>

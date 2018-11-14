@@ -34,5 +34,19 @@ export default {
         body: JSON.stringify(payload),
       }
     ).then(resp => resp.json())
+  },
+
+  delete (uri) {
+    return fetch(
+      `${VERSION_PATH}${uri}`,
+      {
+        method: "DELETE",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+      }
+    )
   }
 }

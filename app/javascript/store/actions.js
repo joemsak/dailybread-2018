@@ -51,5 +51,12 @@ export default {
 
   editBill ({ commit }, bill) {
     commit('editingBill', bill)
+  },
+
+  deleteBill ({ commit }, bill) {
+    Api.delete(`/bills/${bill.id}`)
+      .then(() => {
+        commit('bills', { id: bill.id, _delete: true })
+      })
   }
 }

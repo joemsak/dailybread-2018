@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapState, mapActions } from 'vuex'
 
 import Api from 'utils/api'

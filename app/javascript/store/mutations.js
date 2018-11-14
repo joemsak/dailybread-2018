@@ -15,10 +15,16 @@ export default {
     const firstPeriodIdx = state.firstPeriodBills.findIndex(b => b.id === data.id)
     const secondPeriodIdx = state.secondPeriodBills.findIndex(b => b.id === data.id)
 
+    if (data._delete && firstPeriodIdx >= 0) {
+      return state.firstPeriodBills.splice(firstPeriodIdx, 1)
+    } else if (data._delete) {
+      return state.secondPeriodBills.splice(secondPeriodIdx, 1)
+    }
+
     if (data.payPeriod == 1 && firstPeriodIdx >= 0) {
-      state.firstPeriodBills.splice(billIdx, 1, data)
+      state.firstPeriodBills.splice(firstPeriodIdx, 1, data)
     } else if (data.payPeriod == 2 && secondPeriodIdx >= 0) {
-      state.secondPeriodBills.splice(billIdx, 1, data)
+      state.secondPeriodBills.splice(secondPeriodIdx, 1, data)
     }
 
     if (data.payPeriod == 1 && secondPeriodIdx >= 0) {
