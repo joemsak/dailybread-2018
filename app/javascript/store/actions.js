@@ -27,6 +27,13 @@ export default {
           commit('bills', { id, ...attributes })
         }
       })
+
+    Api.get(`/expenses`)
+      .then(({ data }) => {
+        for (const { id, attributes } of data) {
+          commit('expenses', { id, ...attributes })
+        }
+      })
   },
 
   updateIncome ({ commit }, payload) {
@@ -57,6 +64,32 @@ export default {
     Api.delete(`/bills/${bill.id}`)
       .then(() => {
         commit('bills', { id: bill.id, _delete: true })
+      })
+  },
+
+  createExpense ({ commit }, payload) {
+    Api.post('/expenses', payload)
+      .then(({ data: { id, attributes } }) => {
+        commit('expenses', { id, ...attributes })
+      })
+  },
+
+  updateExpense ({ state, commit }, payload) {
+    Api.patch(`/expenses/${state.editingExpense.id}`, payload)
+      .then(({ data: { id, attributes } }) => {
+        commit('expenses', { id: state.editingExpense.id, ...payload.expense })
+        commit('editingExpense', null)
+      })
+  },
+
+  editExpense ({ commit }, expense) {
+    commit('editingExpense', expense)
+  },
+
+  deleteExpense ({ commit }, expense) {
+    Api.delete(`/expenses/${expense.id}`)
+      .then(() => {
+        commit('expenses', { id: expense.id, _delete: true })
       })
   }
 }

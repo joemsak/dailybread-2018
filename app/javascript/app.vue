@@ -1,72 +1,42 @@
 <template>
-  <div id="app" class="container-fluid">
-    <div class="row">
-      <div class="col-8">
-        <h3>&#127838; Dailybread</h3>
-        <h4>Know Your Dough</h4>
-        <BillsList />
-      </div>
+  <main>
+    <Header />
 
-      <div class="col-4 pt-3">
-        <IncomeForm />
-        <BillForm />
-      </div>
+    <div id="app" class="container-fluid pt-5">
+      <router-view></router-view>
+
+      <footer>
+        <p>
+          Dailybread was made with Ruby on Rails and Vue by Joseph M. Sak
+          <span><i>&#128247;</i><i>&#128248;</i></span>
+          <a href="https://github.com/joemsak/contribute-to-db2018/">
+            Earn a free year by contributing to the source
+          </a>
+        </p>
+      </footer>
     </div>
-
-    <footer>
-      <p>
-        Dailybread was made with Ruby on Rails and Vue by Joseph M. Sak
-        <span><i>&#128247;</i><i>&#128248;</i></span>
-        <a href="https://github.com/joemsak/contribute-to-db2018/">
-          Earn a free year by contributing to the source
-        </a>
-      </p>
-    </footer>
-  </div>
+  </main>
 </template>
 
 <script>
 import Vue from 'vue'
-import Vue2Filters from 'vue2-filters'
+import { mapActions } from 'vuex'
 
-Vue.use(Vue2Filters)
-
-import IncomeForm from 'components/IncomeForm'
-import BillForm from 'components/BillForm'
-import BillsList from 'components/BillsList'
-
-import Api from 'utils/api'
-
-import { mapState, mapActions } from 'vuex'
+import Header from 'components/Header'
 
 export default {
   components: {
-    IncomeForm,
-    BillForm,
-    BillsList,
+    Header,
   },
-
-  methods: {
-    ...mapActions(['initApp']),
-  },
-
-  created () {
-    this.initApp()
-  }
+  methods: mapActions(['initApp']),
+  created () { this.initApp() }
 }
 </script>
 
 <style lang="scss" scoped>
 #app {
-  margin: 1rem 0;
-}
-
-.col-4 {
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  overflow-x: hidden;
+  margin: 1rem 0 3rem;
+  position: relative;
 }
 
 footer {

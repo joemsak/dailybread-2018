@@ -46,5 +46,23 @@ export default {
 
   editingBill(state, value) {
     state.editingBill = value
-  }
+  },
+
+  expenses(state, data) {
+    const expensesIdx = state.expenses.findIndex(e => e.id === data.id)
+
+    if (data._delete) {
+      return state.expenses.splice(expensesIdx, 1)
+    }
+
+    if (expensesIdx >= 0) {
+      state.expenses.splice(expensesIdx, 1, data)
+    } else {
+      state.expenses.unshift(data)
+    }
+  },
+
+  editingExpense(state, value) {
+    state.editingExpense = value
+  },
 }

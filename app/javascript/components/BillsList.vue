@@ -1,11 +1,11 @@
 <template>
   <div class="grid">
     <div class="col-12" v-if="currentPayPeriod == 1">
-      <BillsTable :bills="firstPeriodBills" />
+      <Table :items="firstPeriodBills" item-type="bill" />
     </div>
 
     <div class="col-12" v-else>
-      <BillsTable :bills="secondPeriodBills" />
+      <Table :items="secondPeriodBills" item-type="bill" />
     </div>
   </div>
 </template>
@@ -13,11 +13,11 @@
 <script>
 import { mapState } from 'vuex'
 
-import BillsTable from 'components/BillsTable'
+import Table from 'components/Table'
 
 export default {
   components: {
-    BillsTable,
+    Table,
   },
 
   computed: mapState([
