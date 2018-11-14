@@ -47,4 +47,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.col-4 {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  overflow-x: hidden;
+}
 </style>
