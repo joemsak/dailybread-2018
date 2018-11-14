@@ -2,9 +2,9 @@ import Api from 'utils/api'
 
 export default {
   initApp ({ commit }) {
-    const payPeriod = window.location.search.match(/payPeriod=(\d)/)[1]
-
-    if (payPeriod) {
+    const search = window.location.search
+    if (search && search.match(/payPeriod=/)) {
+      const payPeriod = search.match(/payPeriod=(\d)/)[1]
       commit('currentPayPeriod', parseInt(payPeriod))
     } else {
       Api.get("/current_pay_period")
