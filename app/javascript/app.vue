@@ -18,7 +18,7 @@
         Dailybread was made with Ruby on Rails and Vue by Joseph M. Sak
         <span><i>&#128247;</i><i>&#128248;</i></span>
         <a href="https://github.com/joemsak/dailybread-2018/">
-          Contribute to the open source
+          Contributors to the open source get a year free
         </a>
       </p>
     </footer>
