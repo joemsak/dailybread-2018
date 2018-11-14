@@ -1,7 +1,7 @@
 class V1::BillsController < ApplicationController
   def index
-    if params[:pay_period]
-      bills = V1::Bill.in_pay_period(params[:pay_period])
+    if period = params.transform_keys(&:underscore)[:pay_period]
+      bills = V1::Bill.in_pay_period(period)
     else
       bills = V1::Bill.all
     end
@@ -30,6 +30,9 @@ class V1::BillsController < ApplicationController
 
   private
   def bill_params
-    params.require(:bill).permit(:name, :amount, :pay_period)
+    params.transform_keys(&:underscore)
+      .require(:bill)
+      .transform_keys(&:underscore)
+      .permit(:name, :amount, :pay_period)
   end
 end

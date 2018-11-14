@@ -36,6 +36,20 @@ export default {
 
   createBill ({ commit }, payload) {
     Api.post('/bills', payload)
-      .then(({ data: { id, attributes } }) => commit('bills', { id, ...attributes }))
+      .then(({ data: { id, attributes } }) => {
+        commit('bills', { id, ...attributes })
+      })
+  },
+
+  updateBill ({ state, commit }, payload) {
+    Api.patch(`/bills/${state.editingBill.id}`, payload)
+      .then(() => {
+        commit('bills', { id: state.editingBill.id, ...payload.bill })
+        commit('editingBill', null)
+      })
+  },
+
+  editBill ({ commit }, bill) {
+    commit('editingBill', bill)
   }
 }

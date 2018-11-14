@@ -12,10 +12,33 @@ export default {
   },
 
   bills(state, data) {
-    if (data.payPeriod == 1 || data.pay_period == 1) {
-      state.firstPeriodBills.push(data)
-    } else {
-      state.secondPeriodBills.push(data)
+    const firstPeriodIdx = state.firstPeriodBills.findIndex(b => b.id === data.id)
+    const secondPeriodIdx = state.secondPeriodBills.findIndex(b => b.id === data.id)
+
+    if (data.payPeriod == 1 && firstPeriodIdx >= 0) {
+      state.firstPeriodBills.splice(billIdx, 1, data)
+    } else if (data.payPeriod == 2 && secondPeriodIdx >= 0) {
+      state.secondPeriodBills.splice(billIdx, 1, data)
     }
+
+    if (data.payPeriod == 1 && secondPeriodIdx >= 0) {
+      state.firstPeriodBills.unshift(data)
+      state.secondPeriodBills.splice(secondPeriodIdx, 1)
+    } else if (data.payPeriod == 2 && firstPeriodIdx >= 0) {
+      state.secondPeriodBills.unshift(data)
+      state.firstPeriodBills.splice(firstPeriodIdx, 1)
+    }
+
+    if (firstPeriodIdx < 0 && secondPeriodIdx < 0) {
+      if (data.payPeriod == 1) {
+        state.firstPeriodBills.unshift(data)
+      } else {
+        state.secondPeriodBills.unshift(data)
+      }
+    }
+  },
+
+  editingBill(state, value) {
+    state.editingBill = value
   }
 }

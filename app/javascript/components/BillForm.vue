@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="addNewBill">
+  <form @submit.prevent="saveBill">
     <div class="btn-group btn-group-toggle" data-toggle="buttons">
       <label :class="['btn', 'btn-secondary', currentPayPeriod == 1 ? 'active' : '']">
         <input
@@ -36,7 +36,7 @@
         ref="billEntryName"
         class="form-control"
         @focus="$event.target.select()"
-        v-model="newBillName"
+        v-model="bill.name"
       />
     </div>
 
@@ -47,11 +47,13 @@
         type="number"
         class="form-control"
         @focus="$event.target.select()"
-        v-model.number="newBillAmount"
+        v-model.number="bill.amount"
       />
     </div>
 
-    <button type="submit" class="btn btn-primary">Add</button>
+    <button type="submit" class="btn btn-primary">
+      {{ editingBill ? "Save" : "Add" }}
+    </button>
 
     <p class="mt-3">
       <strong>Amount remaining:</strong>
@@ -68,13 +70,20 @@ import Api from 'utils/api'
 export default {
   data () {
     return {
-      newBillAmount: null,
-      newBillName: '',
+      bill: {
+        amount: null,
+        name: '',
+      },
     }
   },
 
   computed: {
-    ...mapState(['incomePerPeriod', 'firstPeriodBills', 'secondPeriodBills']),
+    ...mapState([
+      'incomePerPeriod',
+      'firstPeriodBills',
+      'secondPeriodBills',
+      'editingBill'
+    ]),
 
     currentPayPeriod: {
       get() { return this.$store.state.currentPayPeriod },
@@ -92,24 +101,37 @@ export default {
 
       return this.incomePerPeriod.amount - sum
     },
+  },
 
+  watch: {
+    editingBill (currentValue) {
+      this.bill = currentValue || { amount: null, name: '' }
+    }
   },
 
   methods: {
-    ...mapActions(['createBill']),
+    ...mapActions(['createBill', 'updateBill']),
 
-    addNewBill () {
+    saveBill () {
       const payload = {
         "bill": {
-          "name": this.newBillName,
-          "amount": this.newBillAmount,
-          "pay_period": this.currentPayPeriod,
+          "name": this.bill.name,
+          "amount": this.bill.amount,
+          "payPeriod": this.currentPayPeriod,
         }
       }
 
-      this.createBill(payload).then(() => {
-        this.newBillName = ''
-        this.newBillAmount = null
+      let performAction
+
+      if (this.editingBill) {
+        performAction = this.updateBill(payload)
+      } else {
+        performAction = this.createBill(payload)
+      }
+
+      performAction.then(() => {
+        Vue.set(this.bill, 'name', '')
+        Vue.set(this.bill, 'amount', null)
         this.$refs.billEntryName.focus()
       })
     },

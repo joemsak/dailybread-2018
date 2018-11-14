@@ -3,4 +3,5 @@ export default {
   currentPayPeriod: 1,
   firstPeriodBills: [],
   secondPeriodBills: [],
+  editingBill: null,
 }

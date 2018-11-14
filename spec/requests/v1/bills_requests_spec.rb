@@ -7,7 +7,7 @@ RSpec.describe "Bills" do
         post v1_bills_path, params: {
           bill: {
             name: "Rent",
-            pay_period: 1,
+            payPeriod: 1,
             amount: 350
           },
         }
@@ -26,7 +26,7 @@ RSpec.describe "Bills" do
           post v1_bills_path, params: {
             bill: {
               name: "Rent",
-              pay_period: "current",
+              payPeriod: "current",
               amount: 350
             },
           }
@@ -40,13 +40,13 @@ RSpec.describe "Bills" do
     end
   end
 
-  describe "GET /v1/bills?pay_period=:period" do
+  describe "GET /v1/bills?payPeriod=:period" do
     it "retrieves all bills in period 1" do
       bill = FactoryBot.create(:bill, pay_period: 1)
       FactoryBot.create(:bill, pay_period: 2)
 
       get v1_bills_path, params: {
-        pay_period: 1
+        payPeriod: 1
       }
 
       json = JSON.parse(response.body)['data']
@@ -59,7 +59,7 @@ RSpec.describe "Bills" do
       FactoryBot.create(:bill, pay_period: 1)
 
       get v1_bills_path, params: {
-        pay_period: 2
+        payPeriod: 2
       }
 
       json = JSON.parse(response.body)['data']
@@ -73,7 +73,7 @@ RSpec.describe "Bills" do
 
       Timecop.freeze(Date.new(2019, 6, 14)) do
         get v1_bills_path, params: {
-          pay_period: :current
+          payPeriod: :current
         }
       end
 
@@ -83,7 +83,7 @@ RSpec.describe "Bills" do
 
       Timecop.freeze(Date.new(2019, 6, 28)) do
         get v1_bills_path, params: {
-          pay_period: :current
+          payPeriod: :current
         }
       end
 
@@ -118,7 +118,7 @@ RSpec.describe "Bills" do
           bill: {
             name: "Car payment",
             amount: 1_000_000,
-            pay_period: 1,
+            payPeriod: 1,
           }
         }
       }.to change {
