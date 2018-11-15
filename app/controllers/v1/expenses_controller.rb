@@ -1,11 +1,6 @@
 class V1::ExpensesController < ApplicationController
   def index
-    if period = params.transform_keys(&:underscore)[:pay_period]
-      expenses = V1::Expense.in_pay_period(period).order(:created_at)
-    else
-      expenses = V1::Expense.all.order(:created_at)
-    end
-
+    expenses = V1::Expense.in_current_pay_period.order(:created_at)
     render json: V1::ExpenseSerializer.new(expenses).serialized_json
   end
 

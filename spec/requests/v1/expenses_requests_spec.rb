@@ -1,6 +1,29 @@
 require "rails_helper"
 
 RSpec.describe "Expenses" do
+  describe "GET /v1/expenses" do
+    it "only returns expenses in the current pay period" do
+      expense1 = FactoryBot.create(:expense, made_on: Date.new(2018, 12, 14))
+      expense2 = FactoryBot.create(:expense, made_on: Date.new(2018, 12, 13))
+
+      Timecop.freeze(Date.new(2018, 12, 14)) do
+        get v1_expenses_path
+
+        json = JSON.parse(response.body)['data']
+        expect(json.count).to eq(1)
+        expect(json[0]['id']).to eq(String(expense1.id))
+      end
+
+      Timecop.freeze(Date.new(2018, 12, 13)) do
+        get v1_expenses_path
+
+        json = JSON.parse(response.body)['data']
+        expect(json.count).to eq(1)
+        expect(json[0]['id']).to eq(String(expense2.id))
+      end
+    end
+  end
+
   describe "POST /v1/expenses" do
     it "saves the expense" do
       expect {

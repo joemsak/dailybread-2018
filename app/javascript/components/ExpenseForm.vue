@@ -104,7 +104,15 @@ export default {
       },
 
       set(value) {
-        this.expense.madeOn = new Date(value)
+        const parts = value.split("-")
+
+        const year = parts[0]
+        const month = parts[1]
+        const day = parts[2]
+
+        const localTimeDateString = `${month}/${day}/${year}`
+
+        Vue.set(this.expense, 'madeOn', new Date(localTimeDateString))
       }
     },
 
