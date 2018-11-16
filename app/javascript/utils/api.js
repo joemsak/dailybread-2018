@@ -3,7 +3,14 @@ const VERSION_PATH = "/v1"
 
 export default {
   get (uri) {
-    return fetch(`${VERSION_PATH}${uri}`).then(resp => resp.json())
+    return fetch(
+      `${VERSION_PATH}${uri}`,
+      {
+        headers: {
+          'x-access-token': window.localStorage.getItem('jwt'),
+        },
+      }
+    ).then(resp => resp.json())
   },
 
   patch (uri, payload) {
@@ -14,7 +21,8 @@ export default {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken
+          'X-CSRF-Token': csrfToken,
+          'x-access-token': window.localStorage.getItem('jwt'),
         },
         body: JSON.stringify(payload),
       }
@@ -29,7 +37,8 @@ export default {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken
+          'X-CSRF-Token': csrfToken,
+          'x-access-token': window.localStorage.getItem('jwt'),
         },
         body: JSON.stringify(payload),
       }
@@ -44,7 +53,8 @@ export default {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken
+          'X-CSRF-Token': csrfToken,
+          'x-access-token': window.localStorage.getItem('jwt'),
         },
       }
     )

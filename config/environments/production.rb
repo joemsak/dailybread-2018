@@ -104,5 +104,8 @@ Rails.application.configure do
     password: Rails.application.credentials.mailgun[:password],
   }
 
-  config.action_mailer.default_url_options = { host: "leftoverdough.com" }
+  config.action_mailer.default_url_options = {
+    host: "leftoverdough.com",
+    protocol: :https,
+  }
 end

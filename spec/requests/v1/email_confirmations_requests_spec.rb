@@ -1,12 +1,14 @@
 require "rails_helper"
 
 RSpec.describe "Email Confirmations" do
-  describe "GET /email_confirmations/:token" do
+  describe "POST /v1/email_confirmations" do
     let!(:user) { FactoryBot.create(:user) }
 
     it "confirms pending users" do
       expect {
-        get email_confirmation_path(user.email_confirmation_token)
+        post v1_email_confirmations_path, params: {
+          token: user.email_confirmation_token
+        }
       }.to change {
         user.reload.status
       }.from("pending").to("confirmed")
@@ -16,7 +18,9 @@ RSpec.describe "Email Confirmations" do
       Timecop.travel(4.hours.from_now + 1.second)
 
       expect {
-        get email_confirmation_path(user.email_confirmation_token)
+        post v1_email_confirmations_path, params: {
+          token: user.email_confirmation_token,
+        }
       }.not_to change {
         user.reload.status
       }.from("pending")
@@ -29,7 +33,9 @@ RSpec.describe "Email Confirmations" do
         this_user = FactoryBot.create(:user)
 
         expect {
-          get email_confirmation_path(this_user.email_confirmation_token)
+          post v1_email_confirmations_path, params: {
+            token: this_user.email_confirmation_token,
+          }
         }.to change {
           this_user.reload.email_confirmation_token_expires_at
         }.from(4.hours.from_now).to(Time.zone.local(1970, 1, 1))
@@ -49,7 +55,9 @@ RSpec.describe "Email Confirmations" do
         'HS256'
       ).and_return("abc123.xyz456.mno789")
 
-      get email_confirmation_path(user.email_confirmation_token)
+      post v1_email_confirmations_path, params: {
+        token: user.email_confirmation_token,
+      }
 
       json = JSON.parse(response.body)
       expect(json['jwt']).to eq('abc123.xyz456.mno789')

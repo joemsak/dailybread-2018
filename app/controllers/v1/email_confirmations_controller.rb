@@ -1,10 +1,8 @@
-class EmailConfirmationsController < ApplicationController
-  skip_before_action :authenticate_user
-
-  def show
+class V1::EmailConfirmationsController < ApplicationController
+  def create
     user = V1::User.pending
       .where("email_confirmation_token_expires_at >= ?", Time.current)
-      .find_by(email_confirmation_token: params[:id])
+      .find_by(email_confirmation_token: email_confirmation_token)
 
     if user
       user.confirmed!
@@ -13,5 +11,10 @@ class EmailConfirmationsController < ApplicationController
     else
       head :not_found
     end
+  end
+
+  private
+  def email_confirmation_token
+    params.require(:token)
   end
 end

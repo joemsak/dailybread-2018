@@ -23,4 +23,9 @@ class V1::User < ApplicationRecord
   has_one :income
   has_many :expenses
   has_many :bills
+
+  def prepare_for_signin
+    regenerate_magic_signin_token
+    update(magic_signin_token_expires_at: 15.minutes.from_now)
+  end
 end

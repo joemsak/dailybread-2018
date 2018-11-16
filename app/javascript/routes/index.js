@@ -9,6 +9,13 @@ import Bills from 'components/Bills'
 export const routes = [
   { path: '/', component: Expenses },
   { path: '/bills', component: Bills },
+  {
+    path: '/logout',
+    beforeEnter: () => {
+      window.localStorage.removeItem('jwt')
+      window.location.href = "/signin"
+    }
+  }
 ]
 
 export default new VueRouter({

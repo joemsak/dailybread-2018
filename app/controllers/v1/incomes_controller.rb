@@ -5,7 +5,8 @@ class V1::IncomesController < ApplicationController
   end
 
   def show
-    render json: V1::IncomeSerializer.new(current_user.income).serialized_json
+    income = current_user.income
+    render json: V1::IncomeSerializer.new(income).serialized_json
   end
 
   def update

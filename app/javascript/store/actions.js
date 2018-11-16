@@ -1,8 +1,40 @@
 import Api from 'utils/api'
 
 export default {
-  initApp ({ commit }) {
+  initApp ({ dispatch }) {
     const search = window.location.search
+
+    if (window.localStorage.getItem('jwt')) {
+      dispatch('initEverything')
+    } else if (search && search.match(/magicLinkToken=/)) {
+      const token = search.match(/magicLinkToken=(\w+)/)[1]
+
+      Api.post('/access_tokens', { token })
+        .then(json => {
+          window.localStorage.setItem('jwt', json.jwt)
+          dispatch('initEverything')
+        })
+    } else if (search && search.match(/emailConfirmationToken=/)) {
+      const token = search.match(/emailConfirmationToken=(\w+)/)[1]
+
+      Api.post('/email_confirmations', { token })
+        .then(json => {
+          window.localStorage.setItem('jwt', json.jwt)
+          dispatch('initEverything')
+        })
+    }
+  },
+
+  initEverything ({ dispatch }) {
+    dispatch('initPayPeriod')
+    dispatch('initIncome')
+    dispatch('initBills')
+    dispatch('initExpenses')
+  },
+
+  initPayPeriod ({ commit }) {
+    const search = window.location.search
+
     if (search && search.match(/payPeriod=/)) {
       const payPeriod = search.match(/payPeriod=(\d)/)[1]
       commit('currentPayPeriod', parseInt(payPeriod))
@@ -10,7 +42,9 @@ export default {
       Api.get("/current_pay_period")
         .then(({ data }) => commit('currentPayPeriod', data.attributes.current))
     }
+  },
 
+  initIncome ({ commit }) {
     Api.get("/income")
       .then(({ data }) => {
         if (data) {
@@ -20,14 +54,18 @@ export default {
           commit('incomePerPeriod', { id: null, amount: 0 })
         }
       })
+  },
 
+  initBills ({ commit }) {
     Api.get(`/bills`)
       .then(({ data }) => {
         for (const { id, attributes } of data) {
           commit('bills', { id, ...attributes })
         }
       })
+  },
 
+  initExpenses ({ commit }) {
     Api.get(`/expenses`)
       .then(({ data }) => {
         for (const { id, attributes } of data) {

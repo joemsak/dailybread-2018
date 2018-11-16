@@ -30,4 +30,10 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  signin_mailer:
+    send_magic_link:
+      subject: Sign in to Leftover Dough
+
+  signup_mailer:
+    send_confirmation_email:
+      subject: Confirm your email
