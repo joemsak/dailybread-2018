@@ -8,8 +8,17 @@ class V1::AccessTokensController < ApplicationController
       user.update(
         magic_signin_token_expires_at: Time.zone.local(1970, 1, 1)
       )
+
+      user.regenerate_access_refresh_token
+
       jwt = V1::JWTAuth.for(user)
-      render json: { jwt: jwt }
+      decoded = V1::JWTAuth.decode(jwt)
+
+      render json: {
+        jwt: jwt,
+        expiresAt: decoded[0]['exp'],
+        refreshToken: user.access_refresh_token,
+      }
     else
       head :not_found
     end

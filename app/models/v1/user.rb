@@ -6,6 +6,11 @@ class V1::User < ApplicationRecord
 
   has_secure_token :magic_signin_token
   has_secure_token :email_confirmation_token
+  has_secure_token :access_refresh_token
+
+  def self.generate_unique_secure_token
+    SecureRandom.base58(100)
+  end
 
   before_save -> {
     self.email_confirmation_token_expires_at = Time.current + 4.hours
