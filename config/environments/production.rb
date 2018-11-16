@@ -103,4 +103,6 @@ Rails.application.configure do
     user_name: Rails.application.credentials.mailgun[:username],
     password: Rails.application.credentials.mailgun[:password],
   }
+
+  config.action_mailer.default_url_options = { host: "leftoverdough.com" }
 end
