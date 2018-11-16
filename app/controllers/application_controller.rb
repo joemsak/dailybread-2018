@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
 
   def current_user
     if decoded = V1::JWTAuth.decode(request.headers['x-access-token'])
-      @current_user ||= V1::User.find(decoded.first['id'])
+      @current_user ||= V1::User.confirmed.find(decoded.first['id'])
     end
   end
 end
