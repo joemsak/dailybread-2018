@@ -30,5 +30,6 @@ module LeftoverDough
     # Don't generate system test files.
     config.generators.system_tests = nil
     config.time_zone = "Mexico City"
+    config.read_encrypted_secrets = true
   end
 end
