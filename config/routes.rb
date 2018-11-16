@@ -1,6 +1,8 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
-  get 'signups/new'
-  get 'signins/new'
+  mount Sidekiq::Web => '/sidekiq'
+
   api_version module: "V1", path: { value: "v1" }, default: true do
     resource :current_pay_period, only: :show
     resource :income, only: [:show, :create, :update]
