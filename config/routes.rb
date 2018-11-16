@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
-  namespace :v1 do
-    get 'users/create'
-  end
+  get 'signups/new'
+  get 'signins/new'
   api_version module: "V1", path: { value: "v1" }, default: true do
     resource :current_pay_period, only: :show
     resource :income, only: [:show, :create, :update]
@@ -11,6 +10,11 @@ Rails.application.routes.draw do
 
     resources :users, only: :create
   end
+
+  get :signin, to: 'signins#new', as: :signin
+  get :signup, to: 'signups#new', as: :signup
+
+  resources :email_confirmations, only: :show
 
   root to: "home#show"
 end

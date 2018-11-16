@@ -10,21 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_15_204615) do
+ActiveRecord::Schema.define(version: 2018_11_16_015846) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "migrations", id: false, force: :cascade do |t|
-    t.text "name", null: false
-    t.index ["name"], name: "migrations_name_idx", unique: true
-  end
-
-  create_table "recurring_bills", force: :cascade do |t|
-    t.text "name", null: false
-    t.integer "amount_in_pennies", null: false
-    t.integer "pay_period", null: false
-  end
 
   create_table "v1_bills", force: :cascade do |t|
     t.integer "amount", null: false
@@ -32,6 +21,8 @@ ActiveRecord::Schema.define(version: 2018_11_15_204615) do
     t.integer "pay_period", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_v1_bills_on_user_id"
   end
 
   create_table "v1_expenses", force: :cascade do |t|
@@ -41,12 +32,16 @@ ActiveRecord::Schema.define(version: 2018_11_15_204615) do
     t.date "made_on", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_v1_expenses_on_user_id"
   end
 
   create_table "v1_incomes", force: :cascade do |t|
     t.integer "amount", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_v1_incomes_on_user_id"
   end
 
   create_table "v1_users", force: :cascade do |t|
@@ -60,4 +55,7 @@ ActiveRecord::Schema.define(version: 2018_11_15_204615) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "v1_bills", "v1_users", column: "user_id"
+  add_foreign_key "v1_expenses", "v1_users", column: "user_id"
+  add_foreign_key "v1_incomes", "v1_users", column: "user_id"
 end

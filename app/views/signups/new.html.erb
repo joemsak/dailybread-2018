@@ -1,0 +1,14 @@
+<div class="container pt-3">
+  <h1>Sign up for Leftover Dough</h1>
+
+  <%= form_with model: @user, url: v1_users_path, local: true do |f| %>
+    <div class="form-group">
+      <label for="email">Your email address</label>
+      <%= f.email_field :email, id: "email" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.submit "Sign up", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

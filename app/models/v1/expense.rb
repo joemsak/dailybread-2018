@@ -10,4 +10,6 @@ class V1::Expense < ApplicationRecord
         V1::PayPeriod.current_pay_day_2)
     end
   }
+
+  belongs_to :user
 end

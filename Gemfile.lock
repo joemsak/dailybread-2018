@@ -42,6 +42,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
     arel (9.0.0)
     autoprefixer-rails (9.3.1)
       execjs
@@ -74,6 +76,10 @@ GEM
     i18n (1.1.1)
       concurrent-ruby (~> 1.0)
     jwt (2.1.0)
+    launchy (2.4.3)
+      addressable (~> 2.3)
+    letter_opener (1.6.0)
+      launchy (~> 2.2)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -96,6 +102,7 @@ GEM
       mini_portile2 (~> 2.3.0)
     pg (1.1.3)
     popper_js (1.14.3)
+    public_suffix (3.0.3)
     puma (3.12.0)
     rack (2.0.6)
     rack-proxy (0.6.5)
@@ -209,6 +216,7 @@ DEPENDENCIES
   fast_jsonapi
   holidays
   jwt
+  letter_opener
   listen (>= 3.0.5, < 3.2)
   pg (>= 0.18, < 2.0)
   puma (~> 3.11)

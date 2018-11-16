@@ -9,6 +9,9 @@ class SignupMailer < ApplicationMailer
     @expiration_time = user.email_confirmation_token_expires_at.strftime(
       "%l:%M%P"
     )
+
+    @confirmation_url = email_confirmation_url(user.email_confirmation_token)
+
     mail to: user.email
   end
 end

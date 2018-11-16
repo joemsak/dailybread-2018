@@ -9,11 +9,13 @@ import store from 'store'
 import router from 'routes'
 
 document.addEventListener('DOMContentLoaded', () => {
-  const el = document.body.appendChild(document.createElement('leftoverdough'))
-  new Vue({
-    el,
-    store,
-    router,
-    render: h => h(App)
-  })
+  const el = document.body.querySelector("#leftoverdough-app")
+
+  if (el)
+    new Vue({
+      el,
+      store,
+      router,
+      render: h => h(App)
+    })
 })

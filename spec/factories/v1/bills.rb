@@ -3,5 +3,6 @@ FactoryBot.define do
     amount { 1 }
     name { "MyString" }
     pay_period { 1 }
+    user
   end
 end

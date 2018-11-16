@@ -15,9 +15,14 @@ RSpec.describe "Signups" do
     end
 
     it "sends the new user a confirmation email" do
+      allow(SignupMailer).to receive(:send_confirmation_email).and_call_original
+
       post v1_users_path, params: {
         email: "joe@joesak.com"
       }
+
+      expect(SignupMailer).to have_received(:send_confirmation_email)
+                                .with(V1::User.last)
 
       expect {
         SignupMailer.send_confirmation_email.deliver_later

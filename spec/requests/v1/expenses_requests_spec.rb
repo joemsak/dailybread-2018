@@ -1,13 +1,19 @@
 require "rails_helper"
 
 RSpec.describe "Expenses" do
+  let!(:user) { FactoryBot.create(:user, :confirmed) }
+  let(:jwt) { V1::JWTAuth.for(user) }
+
   describe "GET /v1/expenses" do
-    it "only returns expenses in the current pay period" do
-      expense1 = FactoryBot.create(:expense, made_on: Date.new(2018, 12, 14))
-      expense2 = FactoryBot.create(:expense, made_on: Date.new(2018, 12, 13))
+    it "only returns the user's expenses in the current pay period" do
+      expense1 = FactoryBot.create(:expense, user: user, made_on: Date.new(2018, 12, 14))
+      expense2 = FactoryBot.create(:expense, user: user, made_on: Date.new(2018, 12, 13))
+      FactoryBot.create(:expense, made_on: Date.new(2018, 12, 13))
 
       Timecop.freeze(Date.new(2018, 12, 14)) do
-        get v1_expenses_path
+        get v1_expenses_path, headers: {
+          'x-access-token' => jwt
+        }
 
         json = JSON.parse(response.body)['data']
         expect(json.count).to eq(1)
@@ -15,7 +21,9 @@ RSpec.describe "Expenses" do
       end
 
       Timecop.freeze(Date.new(2018, 12, 13)) do
-        get v1_expenses_path
+        get v1_expenses_path, headers: {
+          'x-access-token' => jwt
+        }
 
         json = JSON.parse(response.body)['data']
         expect(json.count).to eq(1)
@@ -25,7 +33,7 @@ RSpec.describe "Expenses" do
   end
 
   describe "POST /v1/expenses" do
-    it "saves the expense" do
+    it "saves the user's expense" do
       expect {
         post v1_expenses_path, params: {
           expense: {
@@ -34,9 +42,11 @@ RSpec.describe "Expenses" do
             amount: 56.72,
             madeOn: Date.today,
           },
+        }, headers: {
+          'x-access-token' => jwt
         }
       }.to change {
-        V1::Expense.count
+        user.expenses.count
       }.from(0).to(1)
 
       expect(response.status).to eq(201)
@@ -46,14 +56,25 @@ RSpec.describe "Expenses" do
   end
 
   describe "GET /v1/expenses/:id" do
-    it "retrieves the expense" do
+    it "retrieves the user's expense" do
       expense = FactoryBot.create(
         :expense,
+        user: user,
         category: "Professional Development",
         amount: 350
       )
 
-      get v1_expense_path(expense)
+      other = FactoryBot.create(:expense)
+
+      get v1_expense_path(other), headers: {
+        'x-access-token' => jwt
+      }
+
+      expect(response.status).to eq(404)
+
+      get v1_expense_path(expense), headers: {
+        'x-access-token' => jwt
+      }
 
       json = JSON.parse(response.body)['data']
       attrs = json['attributes']
@@ -65,12 +86,27 @@ RSpec.describe "Expenses" do
   end
 
   describe "PATCH /v1/expenses/:id" do
-    it "updates the expense" do
+    it "updates the user's expense" do
       expense = FactoryBot.create(
         :expense,
+        user: user,
         category: "Professional Development",
         amount: 350
       )
+
+      other = FactoryBot.create(:expense)
+
+      patch v1_expense_path(other), params: {
+        expense: {
+          category: "Goofing around",
+          amount: 1_000_000,
+          madeOn: Date.new(2015, 1, 23),
+        }
+      }, headers: {
+        'x-access-token' => jwt
+      }
+
+      expect(response.status).to eq(404)
 
       expect {
         patch v1_expense_path(expense), params: {
@@ -79,6 +115,8 @@ RSpec.describe "Expenses" do
             amount: 1_000_000,
             madeOn: Date.new(2015, 1, 23),
           }
+        }, headers: {
+          'x-access-token' => jwt
         }
       }.to change {
         expense.reload.amount
@@ -95,13 +133,22 @@ RSpec.describe "Expenses" do
   end
 
   describe "DELETE /v1/expenses/:id" do
-    it "destroys the expense" do
-      expense = FactoryBot.create(:expense)
+    it "destroys the user's expense" do
+      expense = FactoryBot.create(:expense, user: user)
+      other = FactoryBot.create(:expense)
+
+      delete v1_expense_path(other), headers: {
+        'x-access-token' => jwt
+      }
+
+      expect(response.status).to eq(404)
 
       expect {
-        delete v1_expense_path(expense)
+        delete v1_expense_path(expense), headers: {
+          'x-access-token' => jwt
+        }
       }.to change {
-        V1::Expense.count
+        user.expenses.count
       }.from(1).to(0)
     end
   end

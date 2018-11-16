@@ -1,27 +1,27 @@
 class V1::ExpensesController < ApplicationController
   def index
-    expenses = V1::Expense.in_current_pay_period.order(:created_at)
+    expenses = current_user.expenses.in_current_pay_period.order(:created_at)
     render json: V1::ExpenseSerializer.new(expenses).serialized_json
   end
 
   def show
-    expense = V1::Expense.find(params[:id])
+    expense = current_user.expenses.find(params[:id])
     render json: V1::ExpenseSerializer.new(expense).serialized_json
   end
 
   def create
-    expense = V1::Expense.create!(expense_params)
+    expense = current_user.expenses.create!(expense_params)
     render json: V1::ExpenseSerializer.new(expense).serialized_json, status: 201
   end
 
   def update
-    expense = V1::Expense.find(params[:id])
+    expense = current_user.expenses.find(params[:id])
     expense.update(expense_params)
     head :no_content
   end
 
   def destroy
-    V1::Expense.find(params[:id]).destroy
+    current_user.expenses.find(params[:id]).destroy
     head :no_content
   end
 

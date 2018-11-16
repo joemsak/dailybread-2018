@@ -4,5 +4,6 @@ FactoryBot.define do
     name { "factory name" }
     amount { 9.99 }
     made_on { Date.today }
+    user
   end
 end

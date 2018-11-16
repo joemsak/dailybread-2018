@@ -12,4 +12,6 @@ class V1::Bill < ApplicationRecord
       self.pay_period = V1::PayPeriod.current
     end
   }
+
+  belongs_to :user
 end
