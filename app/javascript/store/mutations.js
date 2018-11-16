@@ -6,14 +6,15 @@ export default {
   },
 
   incomePerPeriod(state, payload) {
-    for (const key in payload) {
-      Vue.set(state.incomePerPeriod, key, payload[key])
-    }
+    Vue.set(state.incomePerPeriod, 'id', payload.id)
+    Vue.set(state.incomePerPeriod, 'amount', parseFloat(payload.amount))
   },
 
   bills(state, data) {
     const firstPeriodIdx = state.firstPeriodBills.findIndex(b => b.id === data.id)
     const secondPeriodIdx = state.secondPeriodBills.findIndex(b => b.id === data.id)
+
+    data.amount = parseFloat(data.amount)
 
     if (data._delete && firstPeriodIdx >= 0) {
       return state.firstPeriodBills.splice(firstPeriodIdx, 1)
@@ -50,6 +51,7 @@ export default {
 
   expenses(state, data) {
     const expensesIdx = state.expenses.findIndex(e => e.id === data.id)
+    data.amount = parseFloat(data.amount)
 
     if (data._delete) {
       return state.expenses.splice(expensesIdx, 1)
