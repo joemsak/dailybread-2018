@@ -31,5 +31,6 @@ module LeftoverDough
     config.generators.system_tests = nil
     config.time_zone = "Mexico City"
     config.read_encrypted_secrets = true
+    config.active_job.queue_adapter = :sidekiq
   end
 end
