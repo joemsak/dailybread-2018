@@ -5,8 +5,10 @@ class ApplicationController < ActionController::Base
 
   private
   def current_user
-    if decoded = V1::JWTAuth.decode(request.headers['x-access-token'])
-      @current_user ||= V1::User.confirmed.find(decoded.first['id'])
-    end
+    decoded = V1::JWTAuth.decode(
+      request.headers['x-access-token']
+    ) || [{ "id" => -1 }]
+
+    @current_user ||= V1::User.confirmed.find(decoded.first['id'])
   end
 end

@@ -12,7 +12,9 @@ Rails.application.routes.draw do
 
     resources :users, only: :create
     resources :email_confirmations, only: :create
+
     resources :access_tokens, only: :create
+    resources :access_token_refreshes, only: :create
   end
 
   get :signup, to: 'signups#new', as: :signup

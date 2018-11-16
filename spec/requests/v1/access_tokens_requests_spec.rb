@@ -66,18 +66,16 @@ RSpec.describe "Access Tokens" do
     end
 
     it "returns a refresh token in JSON" do
-      Timecop.freeze do
-        expect {
-          post v1_access_tokens_path, params: {
-            token: user.magic_signin_token,
-          }
-        }.to change {
-          user.reload.access_refresh_token
+      expect {
+        post v1_access_tokens_path, params: {
+          token: user.magic_signin_token,
         }
+      }.to change {
+        user.reload.access_refresh_token
+      }
 
-        json = JSON.parse(response.body)
-        expect(json['refreshToken']).to eq(user.access_refresh_token)
-      end
+      json = JSON.parse(response.body)
+      expect(json['refreshToken']).to eq(user.access_refresh_token)
     end
   end
 end
