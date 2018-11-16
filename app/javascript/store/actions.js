@@ -114,7 +114,7 @@ export default {
 
   updateExpense ({ state, commit }, payload) {
     Api.patch(`/expenses/${state.editingExpense.id}`, payload)
-      .then(({ data: { id, attributes } }) => {
+      .then(() => {
         commit('expenses', { id: state.editingExpense.id, ...payload.expense })
         commit('editingExpense', null)
       })

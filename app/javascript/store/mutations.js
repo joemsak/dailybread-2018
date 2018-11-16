@@ -55,6 +55,17 @@ export default {
       return state.expenses.splice(expensesIdx, 1)
     }
 
+    if (typeof(data.madeOn) === 'string') {
+      const parts = data.madeOn.split("T")[0].split("-")
+      const year = parts[0]
+      const month = parts[1]
+      const day = parts[2]
+
+      data.madeOn = new Date([month, day, year].join("/"))
+    } else {
+      data.madeOn = data.madeOn.toLocaleDateString()
+    }
+
     if (expensesIdx >= 0) {
       state.expenses.splice(expensesIdx, 1, data)
     } else {

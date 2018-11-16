@@ -96,11 +96,16 @@ export default {
       get() {
         const madeOn = this.expense.madeOn
 
-        const year = madeOn.getFullYear()
-        const month = madeOn.getMonth() + 1
-        const day = madeOn.getDate()
+        if (typeof(madeOn) === 'string') {
+          const parts = madeOn.split('/')
+          return [parts[2], parts[0], parts[1]].join("-")
+        } else {
+          const year = madeOn.getFullYear()
+          const month = madeOn.getMonth() + 1
+          const day = madeOn.getDate()
 
-        return [year, month, day].join("-")
+          return [year, month, day].join("-")
+        }
       },
 
       set(value) {
