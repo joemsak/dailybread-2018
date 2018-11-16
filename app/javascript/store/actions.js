@@ -2,30 +2,6 @@ import Api from 'utils/api'
 
 export default {
   initApp ({ dispatch }) {
-    const search = window.location.search
-
-    if (window.localStorage.getItem('jwt')) {
-      dispatch('initEverything')
-    } else if (search && search.match(/magicLinkToken=/)) {
-      const token = search.match(/magicLinkToken=(\w+)/)[1]
-
-      Api.post('/access_tokens', { token })
-        .then(json => {
-          window.localStorage.setItem('jwt', json.jwt)
-          dispatch('initEverything')
-        })
-    } else if (search && search.match(/emailConfirmationToken=/)) {
-      const token = search.match(/emailConfirmationToken=(\w+)/)[1]
-
-      Api.post('/email_confirmations', { token })
-        .then(json => {
-          window.localStorage.setItem('jwt', json.jwt)
-          dispatch('initEverything')
-        })
-    }
-  },
-
-  initEverything ({ dispatch }) {
     dispatch('initPayPeriod')
     dispatch('initIncome')
     dispatch('initBills')

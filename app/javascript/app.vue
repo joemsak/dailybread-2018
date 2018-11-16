@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapActions } from 'vuex'
 
 import Header from 'components/Header'
@@ -29,7 +28,7 @@ export default {
     Header,
   },
   methods: mapActions(['initApp']),
-  created () { this.initApp() }
+  created () { this.initApp() },
 }
 </script>
 
