@@ -9,7 +9,7 @@ import store from 'store'
 import router from 'routes'
 
 document.addEventListener('DOMContentLoaded', () => {
-  const el = document.body.appendChild(document.createElement('dailybread'))
+  const el = document.body.appendChild(document.createElement('leftoverdough'))
   new Vue({
     el,
     store,
