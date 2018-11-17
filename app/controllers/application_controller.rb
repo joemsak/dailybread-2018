@@ -3,6 +3,10 @@ class ApplicationController < ActionController::Base
     head :not_found
   }
 
+  rescue_from JWT::ExpiredSignature, with: -> {
+    head :unauthorized
+  }
+
   private
   def current_user
     decoded = V1::JWTAuth.decode(

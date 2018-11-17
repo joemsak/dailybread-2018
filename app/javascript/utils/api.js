@@ -10,7 +10,13 @@ export default {
           'x-access-token': window.localStorage.getItem('jwt'),
         },
       }
-    ).then(resp => resp.json())
+    ).then(resp => {
+      if (resp.status === 401) {
+        window.location.href = "/signin"
+      } else {
+        return resp.json()
+      }
+    })
   },
 
   patch (uri, payload) {
@@ -26,7 +32,11 @@ export default {
         },
         body: JSON.stringify(payload),
       }
-    )
+    ).then(resp => {
+      if (resp.status === 401) {
+        window.location.href = "/signin"
+      }
+    })
   },
 
   post (uri, payload) {
@@ -42,7 +52,13 @@ export default {
         },
         body: JSON.stringify(payload),
       }
-    ).then(resp => resp.json())
+    ).then(resp => {
+      if (resp.status === 401) {
+        window.location.href = "/signin"
+      } else {
+        return resp.json()
+      }
+    })
   },
 
   delete (uri) {
@@ -57,6 +73,10 @@ export default {
           'x-access-token': window.localStorage.getItem('jwt'),
         },
       }
-    )
+    ).then(resp => {
+      if (resp.status === 401) {
+        window.location.href = "/signin"
+      }
+    })
   }
 }

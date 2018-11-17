@@ -18,6 +18,6 @@ class V1::JWTAuth
       Rails.application.credentials.secret_key_base,
       true,
       { algorithm: 'HS256' }
-    ) rescue false
+    )
   end
 end
