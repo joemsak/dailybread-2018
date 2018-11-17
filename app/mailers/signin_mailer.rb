@@ -6,6 +6,8 @@ class SigninMailer < ApplicationMailer
       magicLinkToken: user.magic_signin_token
     )
 
+    @time = user.magic_signin_token_expires_at.strftime("%l:%M%p")
+
     mail to: user.email
   end
 end
