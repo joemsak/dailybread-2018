@@ -1,31 +1,33 @@
 <template>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Amount</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Amount</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <tr v-for="item in items" :key="item.id">
-        <td>{{ item.name }}</td>
-        <td>{{ item.amount | currency }}</td>
-        <td>
-          <small>
-            <a href="#" @click.prevent="editItem(item)">
-              edit
-            </a>
-            &nbsp;|&nbsp;
-            <a href="#" class="text-danger" @click.prevent="deleteItem(item)">
-              delete
-            </a>
-          </small>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <tbody>
+        <tr v-for="item in items" :key="item.id">
+          <td>{{ item.name }}</td>
+          <td>{{ item.amount | currency }}</td>
+          <td>
+            <small>
+              <a href="#" @click.prevent="editItem(item)">
+                edit
+              </a>
+              &nbsp;|&nbsp;
+              <a href="#" class="text-danger" @click.prevent="deleteItem(item)">
+                delete
+              </a>
+            </small>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
