@@ -15,7 +15,7 @@ RSpec.describe "Access Token Refreshes" do
       expect(response.status).to eq(404)
     end
 
-    it "ignores / 404s for expired JWTs" do
+    it "ignores / 401 for expired JWTs" do
       Timecop.travel(10.minutes + 1.second)
 
       post v1_access_token_refreshes_path, params: {
@@ -24,7 +24,7 @@ RSpec.describe "Access Token Refreshes" do
         'x-access-token' => jwt
       }
 
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(401)
     end
 
     it "regenerates the original refresh token" do

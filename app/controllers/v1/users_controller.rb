@@ -5,6 +5,7 @@ class V1::UsersController < ApplicationController
     if user.pending?
       SignupMailer.send_confirmation_email(user).deliver_later
     else
+      user.prepare_for_signin
       SigninMailer.send_magic_link(user).deliver_later
     end
   end
