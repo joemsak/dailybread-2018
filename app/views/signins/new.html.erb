@@ -1,4 +1,6 @@
 <div class="container pt-3">
+  <div id="flash" class="d-none alert alert-info"></div>
+
   <div class="row justify-content-center">
     <div class="col-6">
       <h1>Sign in to your Leftover Dough account</h1>
@@ -18,3 +20,17 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var search = window.location.search
+
+  if (search && search.match(/msg=/)) {
+    var msg = decodeURI(search.match(/msg=(.+)&?/)[1])
+    var flash = document.querySelector("#flash")
+
+    flash.classList.remove('d-none')
+    flash.textContent = msg
+  }
+}, false)
+</script>

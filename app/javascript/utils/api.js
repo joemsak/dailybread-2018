@@ -1,6 +1,17 @@
 const csrfToken = document.querySelector('meta[name="csrf-token"]').attributes["content"].nodeValue
 const VERSION_PATH = "/v1"
 
+function forceSignin () {
+  if (window.sessionStorage.getItem('jwt')) {
+    window.location.href = "/signin?msg= \
+      Your session is invalid or has \
+      expired after 10 minutes of inactivity. \
+      Please sign in."
+  } else {
+    window.location.href = "/signin"
+  }
+}
+
 export default {
   get (uri) {
     return fetch(
@@ -12,7 +23,7 @@ export default {
       }
     ).then(resp => {
       if (resp.status === 401) {
-        window.location.href = "/signin"
+        forceSignin()
       } else {
         return resp.json()
       }
@@ -32,11 +43,7 @@ export default {
         },
         body: JSON.stringify(payload),
       }
-    ).then(resp => {
-      if (resp.status === 401) {
-        window.location.href = "/signin"
-      }
-    })
+    ).then(resp => { if (resp.status === 401) forceSignin() })
   },
 
   post (uri, payload) {
@@ -54,7 +61,7 @@ export default {
       }
     ).then(resp => {
       if (resp.status === 401 || resp.status === 404) {
-        window.location.href = "/signin"
+        forceSignin()
       } else if (resp.status === 302) {
         resp.json().then((json) => {
           window.location.href = json.redirectTo
@@ -77,10 +84,6 @@ export default {
           'x-access-token': window.sessionStorage.getItem('jwt'),
         },
       }
-    ).then(resp => {
-      if (resp.status === 401) {
-        window.location.href = "/signin"
-      }
-    })
+    ).then(resp => { if (resp.status === 401) forceSignin() })
   }
 }
