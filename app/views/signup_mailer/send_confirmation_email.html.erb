@@ -5,7 +5,12 @@
 
 <a href="<%= @confirmation_url %>">Confirm your email</a>
 
-<p>This button will last until <%= @expiration_time %></p>
+<p>
+  This button will last until
+  <%= @expiration_time %>, in the
+  <%= Time.current.strftime("%Z") %> / <%= Time.zone.name %>
+  time zone.
+</p>
 
 <p>Any new buttons sent after this will disable this one</p>
 
@@ -14,3 +19,14 @@
 <p>Thanks!<br />
 Joseph M. Sak<br />
 Founder, Developer of leftoverdough.com</p>
+
+P.S., in order to prevent gmail from trimming the content, here is the time that
+this email was sent
+<p>
+  <%= Time.current.strftime("%B %e at %l:%M%p") %>
+  <br />
+  Time zone:
+  <%= Time.current.strftime("%Z") %> / <%= Time.zone.name %>
+  <br />
+  seconds: <%= Time.current.strftime("%S.%L") %>
+</p>
