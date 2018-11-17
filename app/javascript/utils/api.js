@@ -7,7 +7,7 @@ export default {
       `${VERSION_PATH}${uri}`,
       {
         headers: {
-          'x-access-token': window.localStorage.getItem('jwt'),
+          'x-access-token': window.sessionStorage.getItem('jwt'),
         },
       }
     ).then(resp => {
@@ -28,7 +28,7 @@ export default {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrfToken,
-          'x-access-token': window.localStorage.getItem('jwt'),
+          'x-access-token': window.sessionStorage.getItem('jwt'),
         },
         body: JSON.stringify(payload),
       }
@@ -48,7 +48,7 @@ export default {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrfToken,
-          'x-access-token': window.localStorage.getItem('jwt'),
+          'x-access-token': window.sessionStorage.getItem('jwt'),
         },
         body: JSON.stringify(payload),
       }
@@ -74,7 +74,7 @@ export default {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrfToken,
-          'x-access-token': window.localStorage.getItem('jwt'),
+          'x-access-token': window.sessionStorage.getItem('jwt'),
         },
       }
     ).then(resp => {

@@ -12,7 +12,7 @@ export const routes = [
   {
     path: '/logout',
     beforeEnter: () => {
-      window.localStorage.removeItem('jwt')
+      window.sessionStorage.removeItem('jwt')
       window.location.href = "/signin"
     }
   }

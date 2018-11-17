@@ -23,9 +23,14 @@ let refreshJWTIntervalId
 
 window.addEventListener('focus', autoRefreshJWT)
 
+window.addEventListener('blur', () => {
+  clearInterval(refreshJWTIntervalId)
+  refreshJWTIntervalId = 0
+})
+
 function autoRefreshJWT () {
   if (!refreshJWTIntervalId) {
-    const expireStr = window.localStorage.getItem('jwtExpiresAt')
+    const expireStr = window.sessionStorage.getItem('jwtExpiresAt')
 
     const expiry = parseInt(expireStr) - 120 // minus 2 minutes
     const now = Math.floor(new Date().getTime() / 1000)
@@ -37,21 +42,16 @@ function autoRefreshJWT () {
   }
 }
 
-window.addEventListener('blur', () => {
-  clearInterval(refreshJWTIntervalId)
-  refreshJWTIntervalId = 0
-})
-
 function refreshJWT () {
-  const refreshToken = window.localStorage.getItem('refreshToken')
+  const refreshToken = window.sessionStorage.getItem('refreshToken')
   Api.post('/access_token_refreshes', { token: refreshToken })
     .then(json => setJWT(json))
 }
 
 function setJWT (json) {
-  window.localStorage.setItem('jwt', json.jwt)
-  window.localStorage.setItem('jwtExpiresAt', json.expiresAt)
-  window.localStorage.setItem('refreshToken', json.refreshToken)
+  window.sessionStorage.setItem('jwt', json.jwt)
+  window.sessionStorage.setItem('jwtExpiresAt', json.expiresAt)
+  window.sessionStorage.setItem('refreshToken', json.refreshToken)
   clearInterval(refreshJWTIntervalId)
   autoRefreshJWT()
 }
@@ -59,13 +59,13 @@ function setJWT (json) {
 document.addEventListener('DOMContentLoaded', () => {
   const el = document.body.querySelector("#leftoverdough-app")
   const search = window.location.search
-  const jwt = window.localStorage.getItem('jwt')
+  const jwt = window.sessionStorage.getItem('jwt')
 
   if (window.location.pathname.match(/signin|signup|users/)) {
     return false
 
   } else if (window.location.pathname.match(/logout/)) {
-    window.localStorage.removeItem('jwt')
+    window.sessionStorage.removeItem('jwt')
     window.location.href = '/signin'
     return false
 
