@@ -1,5 +1,7 @@
 <div class="container pt-3">
-  <div class="row justify-content-center">
+  <div id="flash" class="d-none alert alert-info"></div>
+
+  <div id="signup" class="row justify-content-center">
     <div class="col-6">
       <h1>Sign up for Leftover Dough</h1>
       <%= form_with model: @user, url: v1_users_path, local: true do |f| %>
@@ -17,3 +19,19 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var search = window.location.search
+
+  if (search && search.match(/msg=/)) {
+    var msg = decodeURI(search.match(/msg=(.+)&?/)[1])
+    var flash = document.querySelector("#flash")
+    var signup = document.querySelector("#signup")
+
+    flash.classList.remove('d-none')
+    flash.textContent = msg
+    signup.classList.add("d-none")
+  }
+}, false)
+</script>

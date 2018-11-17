@@ -29,7 +29,7 @@ RSpec.describe "Access Tokens" do
           }
         }.to change {
           this_user.reload.magic_signin_token_expires_at
-        }.from(15.minutes.from_now).to(Time.zone.local(1970, 1, 1))
+        }.from(15.minutes.from_now).to(Time.zone.local(0))
       end
     end
 

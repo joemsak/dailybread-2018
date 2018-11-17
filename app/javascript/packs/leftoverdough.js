@@ -32,7 +32,6 @@ function autoRefreshJWT () {
 
     const milliseconds = (expiry - now) * 1000
 
-    console.log(milliseconds)
     if (milliseconds > 0)
       refreshJWTIntervalId = setInterval(refreshJWT, milliseconds)
   }
@@ -62,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const search = window.location.search
   const jwt = window.localStorage.getItem('jwt')
 
-  if (window.location.pathname.match(/signin|signup/)) {
+  if (window.location.pathname.match(/signin|signup|users/)) {
     return false
 
   } else if (window.location.pathname.match(/logout/)) {

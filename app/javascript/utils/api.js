@@ -53,8 +53,12 @@ export default {
         body: JSON.stringify(payload),
       }
     ).then(resp => {
-      if (resp.status === 401) {
+      if (resp.status === 401 || resp.status === 404) {
         window.location.href = "/signin"
+      } else if (resp.status === 302) {
+        resp.json().then((json) => {
+          window.location.href = json.redirectTo
+        })
       } else {
         return resp.json()
       }

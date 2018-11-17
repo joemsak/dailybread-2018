@@ -1,8 +1,9 @@
 class V1::UsersController < ApplicationController
   def create
-    user = V1::User.find_or_create_by!(user_params)
+    user = V1::User.find_or_initialize_by(user_params)
 
     if user.pending?
+      user.prepare_for_signup
       SignupMailer.send_confirmation_email(user).deliver_later
     else
       user.prepare_for_signin

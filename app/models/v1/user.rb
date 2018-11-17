@@ -12,25 +12,34 @@ class V1::User < ApplicationRecord
     SecureRandom.base58(100)
   end
 
-  before_save -> {
-    self.email_confirmation_token_expires_at = Time.current + 4.hours
-  }, on: :create
-
   after_commit -> {
-    if saved_change_to_status? && confirmed?
-      update_column(
-        :email_confirmation_token_expires_at,
-        Time.zone.local(1970, 1, 1)
-      )
-    end
+    expire_signup_token! if saved_change_to_status? && confirmed?
   }, on: :update
 
-  has_one :income
-  has_many :expenses
-  has_many :bills
+  has_one :income, dependent: :destroy
+  has_many :expenses, dependent: :destroy
+  has_many :bills, dependent: :destroy
+
+  def prepare_for_signup
+    if persisted?
+      update_column(:email_confirmation_token_expires_at, Time.current + 4.hours)
+      regenerate_email_confirmation_token
+    else
+      self.email_confirmation_token_expires_at = Time.current + 4.hours
+      save
+    end
+  end
 
   def prepare_for_signin
-    regenerate_magic_signin_token
     update(magic_signin_token_expires_at: 15.minutes.from_now)
+    regenerate_magic_signin_token
+  end
+
+  def expire_signin_token!
+    update_column(:magic_signin_token_expires_at, Time.zone.local(0))
+  end
+
+  def expire_signup_token!
+    update_column(:email_confirmation_token_expires_at, Time.zone.local(0))
   end
 end

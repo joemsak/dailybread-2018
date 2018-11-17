@@ -38,7 +38,7 @@ RSpec.describe "Email Confirmations" do
           }
         }.to change {
           this_user.reload.email_confirmation_token_expires_at
-        }.from(4.hours.from_now).to(Time.zone.local(1970, 1, 1))
+        }.from(4.hours.from_now).to(Time.zone.local(0))
       end
     end
 
