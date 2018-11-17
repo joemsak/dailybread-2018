@@ -3,7 +3,7 @@ class V1::UsersController < ApplicationController
     user = V1::User.find_or_initialize_by(user_params)
 
     if user.pending?
-      user.prepare_for_signup
+      user.prepare_for_signup_with_save
       SignupMailer.send_confirmation_email(user).deliver_later
     else
       user.prepare_for_signin

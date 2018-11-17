@@ -12,6 +12,10 @@ class V1::User < ApplicationRecord
     SecureRandom.base58(100)
   end
 
+  before_save -> {
+    self.email_confirmation_token_expires_at = Time.current + 4.hours
+  }, on: :create
+
   after_commit -> {
     expire_signup_token! if saved_change_to_status? && confirmed?
   }, on: :update
@@ -26,8 +30,12 @@ class V1::User < ApplicationRecord
       regenerate_email_confirmation_token
     else
       self.email_confirmation_token_expires_at = Time.current + 4.hours
-      save
     end
+  end
+
+  def prepare_for_signup_with_save
+    prepare_for_signup
+    save
   end
 
   def prepare_for_signin

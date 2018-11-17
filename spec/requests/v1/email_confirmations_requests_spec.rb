@@ -14,7 +14,7 @@ RSpec.describe "Email Confirmations" do
       }.from("pending").to("confirmed")
     end
 
-    it "ignores / 404s for expired tokens (for now)" do
+    it "302s for expired tokens" do
       Timecop.travel(4.hours.from_now + 1.second)
 
       expect {
@@ -25,7 +25,7 @@ RSpec.describe "Email Confirmations" do
         user.reload.status
       }.from("pending")
 
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(302)
     end
 
     it "expires the confirmation token" do
