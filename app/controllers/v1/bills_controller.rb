@@ -1,7 +1,8 @@
 class V1::BillsController < ApplicationController
   def index
     if period = params.transform_keys(&:underscore)[:pay_period]
-      bills = current_user.bills.in_pay_period(period).order(:created_at)
+      income = current_user.income
+      bills = current_user.bills.in_pay_period(period, income).order(:created_at)
     else
       bills = current_user.bills.all.order(:created_at)
     end

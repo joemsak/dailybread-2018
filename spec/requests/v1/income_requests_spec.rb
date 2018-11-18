@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Income" do
-  let!(:user) { FactoryBot.create(:user, :confirmed) }
+  let!(:user) { FactoryBot.create(:user, :confirmed, :without_income) }
   let(:jwt) { V1::JWTAuth.for(user) }
 
   describe "POST /v1/income" do
@@ -9,7 +9,8 @@ RSpec.describe "Income" do
       expect {
         post v1_income_path, params: {
           income: {
-            amount: 2000
+            amount: 2000,
+            payroll_type: :semi_monthly_type2,
           },
         }, headers: {
           'x-access-token' => jwt
@@ -47,7 +48,8 @@ RSpec.describe "Income" do
       expect {
         patch v1_income_path, params: {
           income: {
-            amount: 1_000_000
+            amount: 1_000_000,
+            payroll_type: :semi_monthly_type1,
           }
         }, headers: {
           'x-access-token' => jwt
@@ -56,6 +58,9 @@ RSpec.describe "Income" do
       }.to change {
         user_income.reload.amount
       }.from(3000).to(1_000_000)
+      .and change {
+        user_income.reload.payroll_type
+      }.from("semi_monthly_type2").to("semi_monthly_type1")
 
       expect(response.status).to eq(204)
     end

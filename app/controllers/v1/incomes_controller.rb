@@ -16,6 +16,6 @@ class V1::IncomesController < ApplicationController
 
   private
   def income_params
-    params.require(:income).permit(:amount)
+    params.require(:income).permit(:amount, :payroll_type)
   end
 end

@@ -1,6 +1,9 @@
 class V1::ExpensesController < ApplicationController
   def index
-    expenses = current_user.expenses.in_current_pay_period.order(:created_at)
+    expenses = current_user.expenses
+      .in_current_pay_period(current_user.income)
+      .order(:created_at)
+
     render json: V1::ExpenseSerializer.new(expenses).serialized_json
   end
 
