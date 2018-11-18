@@ -17,8 +17,9 @@ RSpec.describe SignupMailer, type: :mailer do
       )
 
       expect(mail.body.encoded).to match("Confirm your email by using the button below")
-      expect(mail.body.encoded).to match("This button will last until #{time}")
-      expect(mail.body.encoded).to match("Any new buttons sent after this will disable this one")
+      expect(mail.body.encoded).to match("This button will last until")
+      expect(mail.body.encoded).to match(time)
+      expect(mail.body.encoded).to match("If you request a new button, it will disable this one.")
       expect(mail.body.encoded).to include(root_url(emailConfirmationToken: user.email_confirmation_token))
     end
   end

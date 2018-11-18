@@ -17,8 +17,9 @@ RSpec.describe SigninMailer, type: :mailer do
 
     it "renders the body" do
       expect(mail.body.encoded).to match("Sign in to your account by using the button below")
-      expect(mail.body.encoded).to match("This button will last until #{user.magic_signin_token_expires_at.strftime("%l:%M%p")}")
-      expect(mail.body.encoded).to match("Any new buttons sent after this will disable this one")
+      expect(mail.body.encoded).to match("This button will last until")
+      expect(mail.body.encoded).to match(user.magic_signin_token_expires_at.strftime("%l:%M%p"))
+      expect(mail.body.encoded).to match("If you request a new button, it will disable this one.")
       expect(mail.body.encoded).to include(root_url(magicLinkToken: user.reload.magic_signin_token))
     end
   end
