@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Leftover Dough Email</title>
     <%= stylesheet_link_tag 'email' %>
+    <meta name="format-detection" content="telephone=no">
   </head>
 
   <body>
@@ -36,7 +37,7 @@
 
                     <tr>
                       <td class="content-block">
-                        [<%= Time.current.to_f %>]
+                        [<%=raw Time.current.to_f.to_s.split("").join("&zwnj;") %>]
                       </td>
                     </tr>
                   </table>
