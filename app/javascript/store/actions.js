@@ -3,8 +3,9 @@ import Api from 'utils/api'
 import router from 'routes'
 
 export default {
-  async initApp ({ dispatch }) {
+  async initApp ({ dispatch, commit }) {
     await dispatch('initIncome').then(() => {
+      commit('appReady', true)
       dispatch('initPayPeriod')
       dispatch('initBills')
       dispatch('initExpenses')
@@ -12,13 +13,14 @@ export default {
   },
 
   async initIncome ({ commit }) {
-    Api.get("/income")
+    await Api.get("/income")
       .then(resp => {
         if (resp.data) {
           const { id, attributes } = resp.data
           commit('incomePerPeriod', { id: id, ...attributes })
         } else if (resp.status === 404) {
           throw(() => {
+            commit('appReady', true)
             router.push('/income')
           })
         } else {

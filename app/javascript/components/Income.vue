@@ -77,6 +77,13 @@
     computed: {
       ...mapState(['incomePerPeriod']),
 
+      payrollType: {
+        get () { return this.incomePerPeriod.payrollType || "" },
+        set (value) {
+          Vue.set(this.$store.state.incomePerPeriod, 'payrollType', value)
+        }
+      },
+
       showAmountForm () {
         if (!this.payrollType)
           return false
@@ -92,22 +99,23 @@
 
       amount: {
         get () { return this.incomePerPeriod.amount },
-        set (value) { Vue.set(this.$store.state.incomePerPeriod, 'amount', value) }
-      },
-
-      payrollType: {
-        get () { return this.incomePerPeriod.payrollType },
-        set (value) { Vue.set(this.$store.state.incomePerPeriod, 'payrollType', value) }
+        set (value) {
+          Vue.set(this.$store.state.incomePerPeriod, 'amount', value)
+        }
       },
 
       specificMonthly: {
         get () { return this.incomePerPeriod.specificMonthly },
-        set (value) { Vue.set(this.$store.state.incomePerPeriod, 'specificMonthly', value) }
+        set (value) {
+          Vue.set(this.$store.state.incomePerPeriod, 'specificMonthly', value)
+        }
       },
 
       specificWeekly: {
         get () { return this.incomePerPeriod.specificWeekly },
-        set (value) { Vue.set(this.$store.state.incomePerPeriod, 'specificWeekly', value) }
+        set (value) {
+          Vue.set(this.$store.state.incomePerPeriod, 'specificWeekly', value)
+        }
       },
     },
 
