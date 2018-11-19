@@ -5,21 +5,18 @@
     </div>
 
     <div class="col-12 order-1 col-md-4 order-md-2">
-      <IncomeForm />
       <BillForm />
     </div>
   </div>
 </template>
 
 <script>
-import IncomeForm from 'components/IncomeForm'
 import BillForm from 'components/BillForm'
 import BillsList from 'components/BillsList'
 
 export default {
   components: {
     BillsList,
-    IncomeForm,
     BillForm,
   },
 }

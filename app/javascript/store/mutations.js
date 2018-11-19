@@ -1,6 +1,10 @@
 import Vue from "vue";
 
 export default {
+  appReady (state, value) {
+    state.appReady = value
+  },
+
   currentPayPeriod(state, period) {
     state.currentPayPeriod = period
   },

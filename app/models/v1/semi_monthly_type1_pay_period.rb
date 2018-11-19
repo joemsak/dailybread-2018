@@ -1,5 +1,5 @@
 class V1::SemiMonthlyType1PayPeriod
-  attr_reader :income
+  attr_reader :id, :income
 
   def initialize(income)
     @income = income

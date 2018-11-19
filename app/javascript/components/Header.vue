@@ -33,6 +33,12 @@
         >Recurring Bills</router-link>
 
         <router-link
+          to="/income"
+          active-class="active"
+          class="nav-item nav-link"
+        >Income Settings</router-link>
+
+        <router-link
           to="/logout"
           class="nav-item nav-link"
         >Log out</router-link>

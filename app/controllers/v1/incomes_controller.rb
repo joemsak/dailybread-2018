@@ -5,13 +5,16 @@ class V1::IncomesController < ApplicationController
   end
 
   def show
-    income = current_user.income
-    render json: V1::IncomeSerializer.new(income).serialized_json
+    if income = current_user.income
+      render json: V1::IncomeSerializer.new(income).serialized_json
+    else
+      head :not_found
+    end
   end
 
   def update
     current_user.income.update(income_params)
-    head 204
+    head :no_content
   end
 
   private

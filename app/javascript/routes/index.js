@@ -5,10 +5,33 @@ Vue.use(VueRouter)
 
 import Expenses from 'components/Expenses'
 import Bills from 'components/Bills'
+import Income from 'components/Income'
+
+import store from 'store'
+
+const requireIncome = (to, _from, next) => {
+  if (store.state.appReady && !store.state.incomePerPeriod.amount) {
+    next('/income')
+  } else {
+    next()
+  }
+}
 
 export const routes = [
-  { path: '/', component: Expenses },
-  { path: '/bills', component: Bills },
+  {
+    path: '/',
+    component: Expenses,
+    beforeEnter: requireIncome,
+  },
+
+  {
+    path: '/bills',
+    component: Bills,
+    beforeEnter: requireIncome,
+  },
+
+  { path: '/income', component: Income },
+
   {
     path: '/logout',
     beforeEnter: () => {

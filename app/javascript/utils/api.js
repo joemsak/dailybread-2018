@@ -24,6 +24,8 @@ export default {
     ).then(resp => {
       if (resp.status === 401) {
         forceSignin()
+      } else if (resp.status === 404) {
+        return resp
       } else {
         return resp.json()
       }

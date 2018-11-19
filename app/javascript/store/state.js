@@ -1,4 +1,6 @@
 export default {
+  appReady: false,
+
   incomePerPeriod: {},
   currentPayPeriod: 1,
 

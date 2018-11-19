@@ -1,11 +1,28 @@
 import Api from 'utils/api'
 
+import router from 'routes'
+
 export default {
-  initApp ({ dispatch }) {
-    dispatch('initPayPeriod')
+  initApp ({ dispatch, commit }) {
     dispatch('initIncome')
+    dispatch('initPayPeriod')
     dispatch('initBills')
     dispatch('initExpenses')
+    commit('appReady', true)
+  },
+
+  initIncome ({ commit }) {
+    Api.get("/income")
+      .then(resp => {
+        if (resp.data) {
+          const { id, attributes } = resp.data
+          commit('incomePerPeriod', { id: id, amount: attributes.amount })
+        } else if (resp.status === 404) {
+          router.push('/income')
+        } else {
+          commit('incomePerPeriod', { id: null, amount: 0 })
+        }
+      })
   },
 
   initPayPeriod ({ commit }) {
@@ -18,18 +35,6 @@ export default {
       Api.get("/current_pay_period")
         .then(({ data }) => commit('currentPayPeriod', data.attributes.current))
     }
-  },
-
-  initIncome ({ commit }) {
-    Api.get("/income")
-      .then(({ data }) => {
-        if (data) {
-          const { id, attributes } = data
-          commit('incomePerPeriod', { id: id, amount: attributes.amount })
-        } else {
-          commit('incomePerPeriod', { id: null, amount: 0 })
-        }
-      })
   },
 
   initBills ({ commit }) {
