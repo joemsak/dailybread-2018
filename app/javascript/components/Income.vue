@@ -15,7 +15,7 @@
         <select v-model="payrollType" id="incomePayrollType" class="form-control">
           <option value="monthly">Once a month</option>
           <option value="semi_monthly_type1">Twice a month on the 1st and 15th</option>
-          <option value="semi_monthly_type2">Twice a month on th 15th and last day</option>
+          <option value="semi_monthly_type2">Twice a month on the 15th and last day</option>
           <option value="bi_weekly">Every other week</option>
           <option value="weekly">Every week</option>
         </select>
@@ -53,7 +53,7 @@
 
     <div class="row justify-content-around">
       <form @submit.prevent="saveIncome" class="col-12 col-sm-8 col-md-6" v-if="showAmountForm">
-        <label for="incomePerPeriod">How much are you paid per paycheck?</label>
+        <label for="incomePerPeriod">How much are you paid each paycheck?</label>
 
         <div class="form-group">
           <input
@@ -71,6 +71,7 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import { mapState, mapActions } from 'vuex'
 
   export default {
@@ -112,7 +113,7 @@
       },
 
       specificWeekly: {
-        get () { return this.incomePerPeriod.specificWeekly },
+        get () { return this.incomePerPeriod.specificWeekly || "friday" },
         set (value) {
           Vue.set(this.$store.state.incomePerPeriod, 'specificWeekly', value)
         }
@@ -134,11 +135,8 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style>
 input, select {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 1.2rem;
-  margin: 0.5rem 0 1rem;
+  margin: 0 0 1rem;
 }
 </style>
