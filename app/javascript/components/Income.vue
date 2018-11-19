@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row justify-content-around">
-      <div class="col-6">
+      <div class="col-12 col-sm-8 col-md-6">
         <h4>Welcome to Leftover Dough!</h4>
 
         <p>Let's start with your income settings...</p>
@@ -9,7 +9,7 @@
     </div>
 
     <div class="row justify-content-around">
-      <form @submit.prevent class="col-6">
+      <form @submit.prevent class="col-12 col-sm-8 col-md-6">
         <label for="incomePayrollType">How often are you paid?</label>
 
         <select v-model="payrollType" id="incomePayrollType" class="form-control">
@@ -23,7 +23,7 @@
     </div>
 
     <div class="row justify-content-around">
-      <form @submit.prevent class="col-6" v-if="payrollType == 'monthly'">
+      <form @submit.prevent class="col-12 col-sm-8 col-md-6" v-if="payrollType == 'monthly'">
         <label for="specificMonthly">On which day of the month?</label>
 
         <select v-model="specificMonthly" id="specificMonthly" class="form-control">
@@ -38,7 +38,7 @@
     </div>
 
     <div class="row justify-content-around">
-      <form @submit.prevent class="col-6" v-if="payrollType.match(/weekly/)">
+      <form @submit.prevent class="col-12 col-sm-8 col-md-6" v-if="payrollType.match(/weekly/)">
         <label for="specificWeekly">On which day of the week?</label>
 
         <select v-model="specificWeekly" id="specificWeekly" class="form-control">
@@ -52,7 +52,7 @@
     </div>
 
     <div class="row justify-content-around">
-      <form @submit.prevent="saveIncome" class="col-6" v-if="showAmountForm">
+      <form @submit.prevent="saveIncome" class="col-12 col-sm-8 col-md-6" v-if="showAmountForm">
         <label for="incomePerPeriod">How much are you paid per paycheck?</label>
 
         <div class="form-group">
