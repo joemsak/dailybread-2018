@@ -11,9 +11,9 @@ RSpec.describe "Income" do
           income: {
             amount: 2000,
             payroll_type: :semi_monthly_type2,
-          },
+          }
         }, headers: {
-          'x-access-token' => jwt
+          'x-access-token' => jwt,
         }
       }.to change {
         user.reload.income
@@ -46,7 +46,7 @@ RSpec.describe "Income" do
       FactoryBot.create(:income, amount: 2000)
 
       expect {
-        patch v1_income_path, params: {
+        patch v1_income_path(format: :json), params: {
           income: {
             amount: 1_000_000,
             payroll_type: :semi_monthly_type1,

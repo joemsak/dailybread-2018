@@ -10,9 +10,9 @@
 
     <div class="row justify-content-around">
       <form @submit.prevent class="col-6">
-        <label for="incomeFrequency">How often are you paid?</label>
+        <label for="incomePayrollType">How often are you paid?</label>
 
-        <select v-model="frequency" id="incomeFrequency" class="form-control">
+        <select v-model="payrollType" id="incomePayrollType" class="form-control">
           <option value="monthly">Once a month</option>
           <option value="semi_monthly_type1">Twice a month on the 1st and 15th</option>
           <option value="semi_monthly_type2">Twice a month on th 15th and last day</option>
@@ -23,10 +23,10 @@
     </div>
 
     <div class="row justify-content-around">
-      <form @submit.prevent class="col-6" v-if="frequency == 'monthly'">
-        <label for="specificFreqMonthly">On which day of the month?</label>
+      <form @submit.prevent class="col-6" v-if="payrollType == 'monthly'">
+        <label for="specificMonthly">On which day of the month?</label>
 
-        <select v-model="specificFreqMonthly" id="specificFreqMonthly" class="form-control">
+        <select v-model="specificMonthly" id="specificMonthly" class="form-control">
           <option
             v-for="n in 28"
             :key="n"
@@ -38,10 +38,10 @@
     </div>
 
     <div class="row justify-content-around">
-      <form @submit.prevent class="col-6" v-if="frequency.match(/weekly/)">
-        <label for="specificFreqWeekly">On which day of the week?</label>
+      <form @submit.prevent class="col-6" v-if="payrollType.match(/weekly/)">
+        <label for="specificWeekly">On which day of the week?</label>
 
-        <select v-model="specificFreqWeekly" id="specificFreqWeekly" class="form-control">
+        <select v-model="specificWeekly" id="specificWeekly" class="form-control">
           <option value="monday">Monday</option>
           <option value="tuesday">Tuesday</option>
           <option value="wednesday">Wednesday</option>
@@ -52,7 +52,7 @@
     </div>
 
     <div class="row justify-content-around">
-      <form @submit.prevent class="col-6" v-if="showAmountForm">
+      <form @submit.prevent="saveIncome" class="col-6" v-if="showAmountForm">
         <label for="incomePerPeriod">How much are you paid per paycheck?</label>
 
         <div class="form-group">
@@ -60,11 +60,10 @@
             id="incomePerPeriod"
             type="number"
             class="form-control"
-            @focus="$event.target.select()"
             v-model="amount"
           />
 
-          <button class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary">Save</button>
         </div>
       </form>
     </div>
@@ -75,37 +74,55 @@
   import { mapState, mapActions } from 'vuex'
 
   export default {
-    data () {
-      return {
-        frequency: '',
-        specificFreqMonthly: '',
-        specificFreqWeekly: 'friday',
-      }
-    },
-
     computed: {
       ...mapState(['incomePerPeriod']),
 
-      amount: {
-        get() { return this.incomePerPeriod.amount },
-        set(amount) { this.updateIncome({ amount }) }
-      },
-
       showAmountForm () {
-        if (!this.frequency)
+        if (!this.payrollType)
           return false
 
-        if (this.frequency == 'monthly' && !this.specificFreqMonthly)
+        if (this.payrollType == 'monthly' && !this.specificMonthly)
           return false
 
-        if (this.frequency.match(/weekly/) && !this.specificFreqWeekly)
+        if (this.payrollType.match(/weekly/) && !this.specificWeekly)
           return false
 
         return true
       },
+
+      amount: {
+        get () { return this.incomePerPeriod.amount },
+        set (value) { Vue.set(this.$store.state.incomePerPeriod, 'amount', value) }
+      },
+
+      payrollType: {
+        get () { return this.incomePerPeriod.payrollType },
+        set (value) { Vue.set(this.$store.state.incomePerPeriod, 'payrollType', value) }
+      },
+
+      specificMonthly: {
+        get () { return this.incomePerPeriod.specificMonthly },
+        set (value) { Vue.set(this.$store.state.incomePerPeriod, 'specificMonthly', value) }
+      },
+
+      specificWeekly: {
+        get () { return this.incomePerPeriod.specificWeekly },
+        set (value) { Vue.set(this.$store.state.incomePerPeriod, 'specificWeekly', value) }
+      },
     },
 
-    methods: mapActions(['updateIncome']),
+    methods: {
+      ...mapActions(['updateIncome']),
+
+      saveIncome () {
+        this.updateIncome({
+          amount: this.amount,
+          payrollType: this.payrollType,
+          specificMonthly: this.specificMonthly,
+          specificWeekly: this.specificWeekly,
+        })
+      },
+    },
   }
 </script>
 

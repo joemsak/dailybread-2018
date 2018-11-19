@@ -3,24 +3,26 @@ import Api from 'utils/api'
 import router from 'routes'
 
 export default {
-  initApp ({ dispatch, commit }) {
-    dispatch('initIncome')
-    dispatch('initPayPeriod')
-    dispatch('initBills')
-    dispatch('initExpenses')
-    commit('appReady', true)
+  async initApp ({ dispatch }) {
+    await dispatch('initIncome').then(() => {
+      dispatch('initPayPeriod')
+      dispatch('initBills')
+      dispatch('initExpenses')
+    }).catch(fn => fn())
   },
 
-  initIncome ({ commit }) {
+  async initIncome ({ commit }) {
     Api.get("/income")
       .then(resp => {
         if (resp.data) {
           const { id, attributes } = resp.data
-          commit('incomePerPeriod', { id: id, amount: attributes.amount })
+          commit('incomePerPeriod', { id: id, ...attributes })
         } else if (resp.status === 404) {
-          router.push('/income')
+          throw(() => {
+            router.push('/income')
+          })
         } else {
-          commit('incomePerPeriod', { id: null, amount: 0 })
+          commit('incomePerPeriod', { id: null })
         }
       })
   },
@@ -55,9 +57,14 @@ export default {
       })
   },
 
-  updateIncome ({ commit }, payload) {
-    Api.patch("/income", payload)
-      .then(() => commit('incomePerPeriod', payload))
+  updateIncome ({ commit, state }, payload) {
+    if (state.incomePerPeriod.id) {
+      Api.patch("/income", payload)
+        .then(() => commit('incomePerPeriod', payload))
+    } else {
+      Api.post("/income", payload)
+        .then(() => commit('incomePerPeriod', payload))
+    }
   },
 
   createBill ({ commit }, payload) {

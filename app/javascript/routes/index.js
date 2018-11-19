@@ -10,7 +10,7 @@ import Income from 'components/Income'
 import store from 'store'
 
 const requireIncome = (to, _from, next) => {
-  if (store.state.appReady && !store.state.incomePerPeriod.amount) {
+  if (!store.state.incomePerPeriod.id) {
     next('/income')
   } else {
     next()

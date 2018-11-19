@@ -12,6 +12,9 @@ export default {
   incomePerPeriod(state, payload) {
     Vue.set(state.incomePerPeriod, 'id', payload.id)
     Vue.set(state.incomePerPeriod, 'amount', parseFloat(payload.amount))
+    Vue.set(state.incomePerPeriod, 'payrollType', payload.payrollType)
+    Vue.set(state.incomePerPeriod, 'specificMonthly', payload.specificMonthly)
+    Vue.set(state.incomePerPeriod, 'specificWeekly', payload.specificWeekly)
   },
 
   bills(state, data) {
