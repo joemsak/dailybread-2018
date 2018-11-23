@@ -32,13 +32,18 @@ function autoRefreshJWT () {
   if (!refreshJWTIntervalId) {
     const expireStr = window.sessionStorage.getItem('jwtExpiresAt')
 
-    const expiry = parseInt(expireStr) - 120 // minus 2 minutes
+    const expiry = parseInt(expireStr) - 10 // minus 10 seconds
     const now = Math.floor(new Date().getTime() / 1000)
 
     const milliseconds = (expiry - now) * 1000
 
     if (milliseconds > 0)
       refreshJWTIntervalId = setInterval(refreshJWT, milliseconds)
+    } else {
+      window.location.href = "/signin?msg=\
+        Your session is invalid or has \
+        expired after 10 minutes of inactivity. \
+        Please sign in."
   }
 }
 
