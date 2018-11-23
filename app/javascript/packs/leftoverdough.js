@@ -29,21 +29,26 @@ window.addEventListener('blur', () => {
 })
 
 function autoRefreshJWT () {
-  if (!refreshJWTIntervalId) {
-    const expireStr = window.sessionStorage.getItem('jwtExpiresAt')
+  const expireStr = window.sessionStorage.getItem('jwtExpiresAt')
 
+  if (!refreshJWTIntervalId && expireStr) {
     const expiry = parseInt(expireStr) - 10 // minus 10 seconds
     const now = Math.floor(new Date().getTime() / 1000)
 
     const milliseconds = (expiry - now) * 1000
 
-    if (milliseconds > 0)
+    if (milliseconds > 0) {
       refreshJWTIntervalId = setInterval(refreshJWT, milliseconds)
     } else {
+      window.sessionStorage.removeItem('jwt')
+      window.sessionStorage.removeItem('refreshToken')
+      window.sessionStorage.removeItem('jwtExpiresAt')
+
       window.location.href = "/signin?msg=\
         Your session is invalid or has \
         expired after 10 minutes of inactivity. \
         Please sign in."
+    }
   }
 }
 
