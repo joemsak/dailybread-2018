@@ -102,7 +102,10 @@ export default {
         } else {
           const year = madeOn.getFullYear()
           const month = madeOn.getMonth() + 1
-          const day = madeOn.getDate()
+          let day = madeOn.getDate()
+
+          if (day.toString().length === 1)
+            day = `0${day}`
 
           return [year, month, day].join("-")
         }
