@@ -3,6 +3,9 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th v-for="col in extraColumns" :key="col">
+            {{ col | capitalize }}
+          </th>
           <th>Name</th>
           <th>Amount</th>
           <th>Actions</th>
@@ -11,6 +14,9 @@
 
       <tbody>
         <tr v-for="item in items" :key="item.id">
+          <td v-for="col in extraColumns" :key="col">
+            {{ item[col] }}
+          </td>
           <td>{{ item.name }}</td>
           <td>{{ item.amount | currency }}</td>
           <td>
@@ -38,13 +44,18 @@ export default {
     items: {
       type: Array,
       required: true,
-      default: [],
     },
 
     itemType: {
       type: String,
       required: true,
-    }
+    },
+
+    extraColumns: {
+      type: Array,
+      required: false,
+      default: [],
+    },
   },
 
   methods: {

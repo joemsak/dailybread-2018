@@ -1,7 +1,7 @@
 <template>
   <div class="grid">
     <div class="col-12">
-      <Table :items="expenses" item-type="expense" />
+      <Table :items="expenses" item-type="expense" :extra-columns="['category']" />
     </div>
   </div>
 </template>
