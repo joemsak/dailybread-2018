@@ -7,12 +7,29 @@ class ApplicationController < ActionController::Base
     head :unauthorized
   }
 
-  private
-  def current_user
-    decoded = V1::JWTAuth.decode(
-      request.headers['x-access-token']
-    ) || [{ "id" => -1 }]
+  after_action :attach_jwt_headers
 
-    @current_user ||= V1::User.confirmed.find(decoded.first['id'])
+  private
+  def attach_jwt_headers(user = current_user)
+    if user
+      jwt = V1::JWTAuth.for(user)
+      decoded = decoded_jwt(jwt)
+
+      response.headers['x-access-token'] = jwt
+      response.headers['x-access-token-expires-at'] = decoded[0]['exp']
+      response.headers['x-access-refresh-token'] = user.access_refresh_token
+    end
+  end
+
+  def current_user
+    if decoded_jwt
+      @current_user ||= V1::User.confirmed.find(decoded_jwt[0]['id'])
+    end
+  end
+
+  def decoded_jwt(token = nil)
+    if token ||= request.headers['x-access-token']
+      @decoded ||= V1::JWTAuth.decode(token) || [{ "id" => -1 }]
+    end
   end
 end

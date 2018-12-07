@@ -50,8 +50,7 @@ RSpec.describe "Access Tokens" do
         token: user.magic_signin_token,
       }
 
-      json = JSON.parse(response.body)
-      expect(json['jwt']).to eq('abc123.xyz456.mno789')
+      expect(response.headers['x-access-token']).to eq('abc123.xyz456.mno789')
     end
 
     it "returns an expiry time in JSON" do
@@ -60,8 +59,9 @@ RSpec.describe "Access Tokens" do
           token: user.magic_signin_token,
         }
 
-        json = JSON.parse(response.body)
-        expect(json['expiresAt']).to eq(10.minutes.from_now.to_i)
+        expect(
+          response.headers['x-access-token-expires-at']
+        ).to eq(10.minutes.from_now.to_i)
       end
     end
 
@@ -74,8 +74,7 @@ RSpec.describe "Access Tokens" do
         user.reload.access_refresh_token
       }
 
-      json = JSON.parse(response.body)
-      expect(json['refreshToken']).to eq(user.access_refresh_token)
+      expect(response.headers['x-access-refresh-token']).to eq(user.access_refresh_token)
     end
   end
 end

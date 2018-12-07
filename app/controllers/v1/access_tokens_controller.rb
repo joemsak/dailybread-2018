@@ -1,4 +1,6 @@
 class V1::AccessTokensController < ApplicationController
+  skip_after_action :attach_jwt_headers
+
   def create
     user = V1::User.confirmed
       .where("magic_signin_token_expires_at >= ?", Time.current)
@@ -7,15 +9,8 @@ class V1::AccessTokensController < ApplicationController
     if user
       user.expire_signin_token!
       user.regenerate_access_refresh_token
-
-      jwt = V1::JWTAuth.for(user)
-      decoded = V1::JWTAuth.decode(jwt)
-
-      render json: {
-        jwt: jwt,
-        expiresAt: decoded[0]['exp'],
-        refreshToken: user.access_refresh_token,
-      }
+      attach_jwt_headers(user)
+      head :created
     else
       head :not_found
     end

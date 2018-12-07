@@ -44,6 +44,7 @@ RSpec.describe "Email Confirmations" do
 
     it "returns a JWT in JSON" do
       user = FactoryBot.create(:user)
+      fake_token = "abc123.xyz456.mno789"
 
       expect(JWT).to receive(:encode).with({
           iss: "leftoverdough.com",
@@ -53,14 +54,21 @@ RSpec.describe "Email Confirmations" do
         },
         Rails.application.credentials.secret_key_base,
         'HS256'
-      ).and_return("abc123.xyz456.mno789")
+      ).and_return(fake_token)
+
+      expect(V1::JWTAuth).to receive(:decode).with(fake_token) {
+        [{
+          'exp' => 1234567890,
+        }]
+      }
 
       post v1_email_confirmations_path, params: {
         token: user.email_confirmation_token,
       }
 
-      json = JSON.parse(response.body)
-      expect(json['jwt']).to eq('abc123.xyz456.mno789')
+      expect(response.headers['x-access-token']).to eq(fake_token)
+      expect(response.headers['x-access-token-expires-at']).to eq(1234567890)
+      expect(response.headers['x-access-refresh-token']).to eq(user.access_refresh_token)
     end
   end
 end

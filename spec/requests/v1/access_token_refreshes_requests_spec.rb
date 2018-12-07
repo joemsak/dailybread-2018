@@ -56,8 +56,7 @@ RSpec.describe "Access Token Refreshes" do
         'x-access-token' => jwt
       }
 
-      json = JSON.parse(response.body)
-      expect(json['jwt']).not_to be_nil
+      expect(response.headers['x-access-token']).not_to be_nil
     end
 
     it "returns an expiry time in JSON" do
@@ -68,8 +67,7 @@ RSpec.describe "Access Token Refreshes" do
           'x-access-token' => jwt
         }
 
-        json = JSON.parse(response.body)
-        expect(json['expiresAt']).to eq(10.minutes.from_now.to_i)
+        expect(response.headers['x-access-token-expires-at']).to eq(10.minutes.from_now.to_i)
       end
     end
 
@@ -80,8 +78,7 @@ RSpec.describe "Access Token Refreshes" do
         'x-access-token' => jwt
       }
 
-      json = JSON.parse(response.body)
-      expect(json['refreshToken']).to eq(user.reload.access_refresh_token)
+      expect(response.headers['x-access-refresh-token']).to eq(user.reload.access_refresh_token)
     end
   end
 end

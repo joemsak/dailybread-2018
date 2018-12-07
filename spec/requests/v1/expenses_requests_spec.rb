@@ -34,6 +34,15 @@ RSpec.describe "Expenses" do
 
   describe "POST /v1/expenses" do
     it "saves the user's expense" do
+      expect(V1::JWTAuth).to receive(:for).with(user).ordered.and_call_original
+      expect(V1::JWTAuth).to receive(:for).with(user).ordered { "abc123" }
+      expect(V1::JWTAuth).to receive(:decode).with(jwt) {
+        [{
+          'exp' => 1234567890,
+          'id' => user.id,
+        }]
+      }
+
       expect {
         post v1_expenses_path, params: {
           expense: {
@@ -52,6 +61,9 @@ RSpec.describe "Expenses" do
       expect(response.status).to eq(201)
       json = JSON.parse(response.body)['data']
       expect(json['id']).not_to be_nil
+
+      headers = response.headers
+      expect(headers['x-access-token']).to eq('abc123')
     end
   end
 
