@@ -11,6 +11,8 @@ import router from 'routes'
 import store from 'store'
 
 function initApp (el) {
+  window.history.replaceState(null, null, window.location.pathname)
+
   new Vue({
     el,
     store,
@@ -54,16 +56,10 @@ function autoRefreshJWT () {
 
 function refreshJWT () {
   const refreshToken = window.sessionStorage.getItem('refreshToken')
-  Api.post('/access_token_refreshes', { token: refreshToken })
-    .then(json => setJWT(json))
-}
-
-function setJWT (json) {
-  window.sessionStorage.setItem('jwt', json.jwt)
-  window.sessionStorage.setItem('jwtExpiresAt', json.expiresAt)
-  window.sessionStorage.setItem('refreshToken', json.refreshToken)
-  clearInterval(refreshJWTIntervalId)
-  autoRefreshJWT()
+  Api.post('/access_token_refreshes', { token: refreshToken }).then(() => {
+    clearInterval(refreshJWTIntervalId)
+    autoRefreshJWT()
+  })
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -77,33 +73,17 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (window.location.pathname.match(/logout/)) {
     window.sessionStorage.removeItem('jwt')
     window.location.href = '/signin'
-    return false
 
   } else if (search && search.match(/magicLinkToken=/)) {
     const token = search.match(/magicLinkToken=(\w+)/)[1]
-
-    Api.post('/access_tokens', { token })
-      .then(json => {
-        setJWT(json)
-        window.history.replaceState(null, null, window.location.pathname)
-        initApp(el)
-        return false
-      })
+    Api.post('/access_tokens', { token }).then(() =>  initApp(el))
 
   } else if (search && search.match(/emailConfirmationToken=/)) {
     const token = search.match(/emailConfirmationToken=(\w+)/)[1]
-
-    Api.post('/email_confirmations', { token })
-      .then(json => {
-        setJWT(json)
-        window.history.replaceState(null, null, window.location.pathname)
-        initApp(el)
-        return false
-      })
+    Api.post('/email_confirmations', { token }).then(() => initApp(el))
 
   } else if (el && jwt) {
     initApp(el)
-    return false
 
   } else {
     window.location.href = '/signin'

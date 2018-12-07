@@ -12,6 +12,12 @@ function forceSignin () {
   }
 }
 
+function setSessionData(headers) {
+  window.sessionStorage.setItem('jwt', headers.get('x-access-token'))
+  window.sessionStorage.setItem('refreshToken', headers.get('x-access-refresh-token'))
+  window.sessionStorage.setItem('jwtExpiresAt', headers.get('x-access-token-expires-at'))
+}
+
 export default {
   get (uri) {
     return fetch(
@@ -27,7 +33,10 @@ export default {
       } else if (resp.status === 404) {
         return resp
       } else {
-        return resp.json()
+        setSessionData(resp.headers)
+        return resp.text().then(text => {
+          return text ? JSON.parse(text) : {}
+        })
       }
     })
   },
@@ -45,7 +54,16 @@ export default {
         },
         body: JSON.stringify(payload),
       }
-    ).then(resp => { if (resp.status === 401) forceSignin() })
+    ).then(resp => {
+      if (resp.status === 401) {
+        forceSignin()
+      } else {
+        setSessionData(resp.headers)
+        return resp.text().then(text => {
+          return text ? JSON.parse(text) : {}
+        })
+      }
+    })
   },
 
   post (uri, payload) {
@@ -69,7 +87,10 @@ export default {
           window.location.href = json.redirectTo
         })
       } else {
-        return resp.json()
+        setSessionData(resp.headers)
+        return resp.text().then(text => {
+          return text ? JSON.parse(text) : {}
+        })
       }
     })
   },
@@ -86,6 +107,15 @@ export default {
           'x-access-token': window.sessionStorage.getItem('jwt'),
         },
       }
-    ).then(resp => { if (resp.status === 401) forceSignin() })
+    ).then(resp => {
+      if (resp.status === 401) {
+        forceSignin()
+      } else {
+        setSessionData(resp.headers)
+        return resp.text().then(text => {
+          return text ? JSON.parse(text) : {}
+        })
+      }
+    })
   }
 }
