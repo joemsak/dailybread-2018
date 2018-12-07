@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "3.5",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "transform-runtime": "^0.0.0",
     "uuid": "^3.3.2",
     "vue": "^2.5.17",
@@ -10,8 +11,7 @@
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.17",
     "vue2-filters": "^0.3.0",
-    "vuex": "^3.0.1",
-    "babel-plugin-transform-runtime": "^6.23.0"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "webpack-dev-server": "2.11.2"
