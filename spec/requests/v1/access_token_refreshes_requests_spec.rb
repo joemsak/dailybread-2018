@@ -40,21 +40,23 @@ RSpec.describe "Access Token Refreshes" do
     end
 
     it "returns a JWT in JSON" do
-      expect(JWT).to receive(:encode).with({
-          iss: "leftoverdough.com",
-          exp: 10.minutes.from_now.to_i,
-          id: user.id,
-          email: user.email,
-        },
-        Rails.application.credentials.secret_key_base,
-        'HS256'
-      ).and_call_original
+      Timecop.freeze do
+        expect(JWT).to receive(:encode).with({
+            iss: "leftoverdough.com",
+            exp: 10.minutes.from_now.to_i,
+            id: user.id,
+            email: user.email,
+          },
+          Rails.application.credentials.secret_key_base,
+          'HS256'
+        ).and_call_original
 
-      post v1_access_token_refreshes_path, params: {
-        token: user.access_refresh_token,
-      }, headers: {
-        'x-access-token' => jwt
-      }
+        post v1_access_token_refreshes_path, params: {
+          token: user.access_refresh_token,
+        }, headers: {
+          'x-access-token' => jwt
+        }
+      end
 
       expect(response.headers['x-access-token']).not_to be_nil
     end
