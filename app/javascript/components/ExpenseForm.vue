@@ -116,7 +116,10 @@ export default {
 
         const year = parts[0]
         const month = parts[1]
-        const day = parts[2]
+        let day = parts[2]
+
+        if (day.toString().length === 1)
+          day = `0${day}`
 
         const localTimeDateString = `${month}/${day}/${year}`
 
