@@ -34,21 +34,23 @@ RSpec.describe "Access Tokens" do
     end
 
     it "returns a JWT in JSON" do
-      expect(JWT).to receive(:encode).with({
-          iss: "leftoverdough.com",
-          exp: 10.minutes.from_now.to_i,
-          id: user.id,
-          email: user.email,
-        },
-        Rails.application.credentials.secret_key_base,
-        'HS256'
-      ).and_return("abc123.xyz456.mno789")
+      Timecop.freeze do
+        expect(JWT).to receive(:encode).with({
+            iss: "leftoverdough.com",
+            exp: 10.minutes.from_now.to_i,
+            id: user.id,
+            email: user.email,
+          },
+          Rails.application.credentials.secret_key_base,
+          'HS256'
+        ).and_return("abc123.xyz456.mno789")
 
-      allow(JWT).to receive(:decode).and_return([{ "exp" => 123456789 }])
+        allow(JWT).to receive(:decode).and_return([{ "exp" => 123456789 }])
 
-      post v1_access_tokens_path, params: {
-        token: user.magic_signin_token,
-      }
+        post v1_access_tokens_path, params: {
+          token: user.magic_signin_token,
+        }
+      end
 
       expect(response.headers['x-access-token']).to eq('abc123.xyz456.mno789')
     end
