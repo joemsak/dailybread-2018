@@ -7,8 +7,6 @@
     </div>
 
     <div class="col-12 col-md-5 order-1 order-md-2">
-      <h5>Sign in to Leftover Dough</h5>
-
       <%= form_with url: signin_path, local: true do |f| %>
         <div class="form-group">
           <label for="email">Your email address</label>
@@ -16,9 +14,7 @@
         </div>
 
         <div class="form-group">
-          <%= f.submit "Sign in", class: "btn btn-primary" %>
-          or
-          <%= link_to 'Sign up', signup_path %>
+          <%= f.submit "Login or Sign up", class: "btn btn-primary" %>
         </div>
       <% end %>
     </div>
