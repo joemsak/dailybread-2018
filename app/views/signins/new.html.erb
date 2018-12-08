@@ -1,22 +1,56 @@
 <div class="container pt-3">
   <div id="flash" class="d-none alert alert-info"></div>
 
+  <div class="row">
+    <div class="col-12 text-center">
+      <h4>Leftover Dough</h4>
+
+      <p>
+        An expense tracker designed to help you answer the question:
+        <br />
+        <strong>How much money do I have left?</strong>
+      </p>
+    </div>
+  </div>
+
   <div class="row justify-content-center">
-    <div class="col-12 col-md-7 order-2 order-md-1">
+    <div class="col-12 col-md-6 order-2 order-md-1">
       <%= render 'intro' %>
     </div>
 
-    <div class="col-12 col-md-5 order-1 order-md-2">
+    <div class="col-12 col-md-6 order-1 order-md-2">
       <%= form_with url: signin_path, local: true do |f| %>
-        <div class="form-group">
-          <label for="email">Your email address</label>
-          <%= f.email_field :email, id: "email", class: "form-control", required: true %>
-        </div>
+        <label for="email">Your email address</label>
 
-        <div class="form-group">
-          <%= f.submit "Login or Sign up", class: "btn btn-primary" %>
+        <div class="input-group mb-3">
+          <%= f.email_field :email,
+            id: "email",
+            class: "form-control",
+            required: true,
+            "aria-label" => "Email address",
+            "aria-describedby" => "login-signup"
+          %>
+
+          <div class="input-group-append">
+            <%= f.submit "Login or Sign up",
+              id: "login-signup",
+              class: "btn btn-primary"
+            %>
+          </div>
         </div>
       <% end %>
+
+      <%= render 'tour' %>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6">
+      <%= render 'features' %>
+    </div>
+
+    <div class="col-12 col-md-6">
+      <%= render 'pricing' %>
     </div>
   </div>
 </div>
