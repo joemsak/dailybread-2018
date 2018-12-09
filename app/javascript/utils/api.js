@@ -24,6 +24,8 @@ export default {
       `${VERSION_PATH}${uri}`,
       {
         headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application.json',
           'x-access-token': window.sessionStorage.getItem('jwt'),
         },
       }
