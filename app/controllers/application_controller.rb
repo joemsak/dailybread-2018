@@ -24,12 +24,14 @@ class ApplicationController < ActionController::Base
   def current_user
     if decoded_jwt
       @current_user ||= V1::User.confirmed.find(decoded_jwt[0]['id'])
+    else
+      raise ActiveRecord::RecordNotFound
     end
   end
 
   def decoded_jwt(token = nil)
     if token ||= request.headers['x-access-token']
-      @decoded ||= V1::JWTAuth.decode(token) || [{ "id" => -1 }]
+      V1::JWTAuth.decode(token) || [{ "id" => -1 }]
     end
   end
 end

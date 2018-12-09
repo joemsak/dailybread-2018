@@ -34,9 +34,9 @@ RSpec.describe "Expenses" do
 
   describe "POST /v1/expenses" do
     it "saves the user's expense" do
-      expect(V1::JWTAuth).to receive(:for).with(user).ordered.and_call_original
-      expect(V1::JWTAuth).to receive(:for).with(user).ordered { "abc123" }
-      expect(V1::JWTAuth).to receive(:decode).with(jwt) {
+      allow(V1::JWTAuth).to receive(:for) { "abc123" }
+
+      allow(V1::JWTAuth).to receive(:decode) {
         [{
           'exp' => 1234567890,
           'id' => user.id,
