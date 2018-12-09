@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     resources :access_tokens, only: :create
     resources :access_token_refreshes, only: :create
 
-    resource :checkout, only: :create
+    resource :checkout, only: [:new, :create]
   end
 
   get :signup, to: 'signins#new', as: :signup

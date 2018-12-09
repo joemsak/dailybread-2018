@@ -7,9 +7,8 @@ RSpec.describe "Checkouts" do
 
       expect {
         post v1_checkout_path, params: {
-          stripe_token: "abc123"
-        }, headers: {
-          'x-access-token' => V1::JWTAuth.for(user)
+          stripeToken: "abc123",
+          jwt: V1::JWTAuth.for(user)
         }
       }.to change {
         user.reload.payment_gateway_token

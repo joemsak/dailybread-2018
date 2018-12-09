@@ -1,0 +1,25 @@
+<div class="container pt-5 text-center">
+  <%= form_with url: "/checkout" do |f| %>
+    <%= f.hidden_field :jwt %>
+
+    <script
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="pk_test_6bYuHRe4zpv5pT3oqzm0cmkU"
+      data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+      data-locale="auto"
+      data-zip-code="true"
+      data-name="Leftover Dough"
+      data-description="Monthly Subscription ($4 per month)"
+      data-panel-label="Subscribe"
+      data-label="Subscribe"
+      data-amount="400"
+      data-allow-remember-me="false">
+    </script>
+  <% end %>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById("jwt").value = window.sessionStorage.getItem("jwt")
+})
+</script>

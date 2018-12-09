@@ -38,6 +38,11 @@
           class="nav-item nav-link"
         >Income Settings</router-link>
 
+        <a
+          href="/checkout/new"
+          class="nav-item nav-link"
+        >Subscribe</a>
+
         <router-link
           to="/logout"
           class="nav-item nav-link"
