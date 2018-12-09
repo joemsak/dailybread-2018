@@ -66,8 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const el = document.body.querySelector("#leftoverdough-app")
   const search = window.location.search
   const jwt = window.sessionStorage.getItem('jwt')
+  const expireStr = window.sessionStorage.getItem('jwtExpiresAt')
 
-  if (window.location.pathname.match(/signin|signup|users/)) {
+  const expiry = parseInt(expireStr)
+  const now = Math.floor(new Date().getTime() / 1000)
+
+  const expiresIn = (expiry - now) * 1000
+
+  if (window.location.pathname.match(/signin|signup|users|checkout/)) {
     return false
 
   } else if (window.location.pathname.match(/logout/)) {
@@ -82,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const token = search.match(/emailConfirmationToken=(\w+)/)[1]
     Api.post('/email_confirmations', { token }).then(() => initApp(el))
 
-  } else if (el && jwt) {
+  } else if (el && jwt && expiresIn > 0) {
     initApp(el)
 
   } else {

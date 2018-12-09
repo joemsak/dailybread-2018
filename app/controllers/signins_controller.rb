@@ -1,6 +1,8 @@
 class SigninsController < ApplicationController
   layout :resolve_layout
 
+  skip_after_action :attach_jwt_headers, only: :new
+
   def create
     user = V1::User.find_or_initialize_by(email: signin_email)
 
