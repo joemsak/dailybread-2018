@@ -1,25 +1,62 @@
-<div class="container pt-5 text-center">
-  <%= form_with url: "/checkout" do |f| %>
-    <%= f.hidden_field :jwt %>
+<script src="https://checkout.stripe.com/checkout.js"></script>
 
-    <script
-      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-      data-key="<%= Rails.application.credentials.stripe[:public_key] %>"
-      data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-      data-locale="auto"
-      data-zip-code="true"
-      data-name="Leftover Dough"
-      data-description="Monthly Subscription ($4 per month)"
-      data-panel-label="Subscribe"
-      data-label="Subscribe"
-      data-amount="400"
-      data-allow-remember-me="false">
-    </script>
+<div class="container pt-5 text-center">
+  <%= form_with(
+      url: v1_checkout_path,
+      id: "checkout-form",
+      data: {
+        key: Rails.application.credentials.stripe[:public_key],
+      }) do |f| %>
+    <%= f.hidden_field :jwt %>
+    <%= f.hidden_field :stripeToken %>
+
+    <%= content_tag :button, id: "subscribe-btn", class: "btn btn-primary" do %>
+      Subscribe Today
+    <% end %>
   <% end %>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById("jwt").value = window.sessionStorage.getItem("jwt")
+  var jwt = window.sessionStorage.getItem('jwt')
+
+  fetch(
+    "/v1/current_user",
+    {
+      headers: {
+        'x-access-token': jwt,
+      },
+    }
+  ).then(function(resp) { return resp.json() }).then(function(json) {
+    var form = document.getElementById("checkout-form")
+
+    var handler = StripeCheckout.configure({
+      key: form.dataset.key,
+      image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+      locale: 'auto',
+      token: function(token) {
+        document.getElementById("jwt").value = jwt
+        document.getElementById("stripeToken").value = token.id
+        form.submit()
+      }
+    });
+
+    document.getElementById('subscribe-btn').addEventListener('click', function(e) {
+      handler.open({
+        name: "Leftover Dough",
+        description: "Monthly Subscription ($4 per month)",
+        panelLabel: "Subscribe now for {{amount}}",
+        amount: 400,
+        email: json.email,
+        allowRememberMe: false,
+        zipCode: true,
+      });
+      e.preventDefault();
+    });
+
+    window.addEventListener('popstate', function() {
+      handler.close();
+    });
+  })
 })
 </script>
