@@ -5,6 +5,10 @@ export default {
     state.appReady = value
   },
 
+  currentEmail(state, value) {
+    state.currentEmail = value
+  },
+
   currentPayPeriod(state, period) {
     state.currentPayPeriod = period
   },

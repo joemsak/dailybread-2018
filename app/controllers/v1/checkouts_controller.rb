@@ -1,9 +1,7 @@
 class V1::CheckoutsController < ApplicationController
   def create
-    user = V1::User.find(decoded_jwt(jwt)[0]['id'])
-
     customer = Stripe::Customer.create({
-      email: user.email,
+      email: current_user.email,
       source: token,
     })
 
@@ -12,21 +10,16 @@ class V1::CheckoutsController < ApplicationController
       items: [{ plan: Rails.application.credentials.stripe[:plan_id] }],
     })
 
-    user.update(
-      payment_gateway_token: token,
+    current_user.update(
       payment_gateway_customer_id: customer.id,
       payment_gateway_subscription_id: subscription.id,
     )
 
-    redirect_to root_path
+    head :created
   end
 
   private
   def token
-    params.require(:stripeToken)
-  end
-
-  def jwt
-    params.require(:jwt)
+    params.require(:stripe_token)
   end
 end

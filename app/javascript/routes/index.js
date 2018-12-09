@@ -6,6 +6,7 @@ Vue.use(VueRouter)
 import Expenses from 'components/Expenses'
 import Bills from 'components/Bills'
 import Income from 'components/Income'
+import ManageSubscription from 'components/ManageSubscription'
 
 import store from 'store'
 
@@ -31,6 +32,8 @@ export const routes = [
   },
 
   { path: '/income', component: Income },
+
+  { path: '/subscription', component: ManageSubscription },
 
   {
     path: '/logout',
