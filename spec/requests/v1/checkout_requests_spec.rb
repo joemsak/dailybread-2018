@@ -8,6 +8,10 @@ RSpec.describe "Checkouts" do
       allow(Stripe::Customer).to receive(:create) {
         Struct.new(:id).new("cus_123")
       }
+
+      allow(Stripe::Subscription).to receive(:create) {
+        Struct.new(:id).new("sub_123")
+      }
     end
 
     it "adds the token to the current user" do
@@ -42,6 +46,22 @@ RSpec.describe "Checkouts" do
       }.to change {
         user.reload.payment_gateway_customer_id
       }.from(nil).to("cus_123")
+    end
+
+    it "creates the subscription" do
+      expect {
+        post v1_checkout_path, params: {
+          stripeToken: "tok_123",
+          jwt: V1::JWTAuth.for(user)
+        }
+      }.to change {
+        user.reload.payment_gateway_subscription_id
+      }.from(nil).to("sub_123")
+
+      expect(Stripe::Subscription).to have_received(:create).with({
+        customer: 'cus_123',
+        items: [{plan: Rails.application.credentials.stripe[:plan_id]}],
+      })
     end
   end
 end

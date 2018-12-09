@@ -9,9 +9,15 @@ class V1::CheckoutsController < ApplicationController
       source: token,
     })
 
+    subscription = Stripe::Subscription.create({
+      customer: customer.id,
+      items: [{ plan: Rails.application.credentials.stripe[:plan_id] }],
+    })
+
     user.update(
       payment_gateway_token: token,
-      payment_gateway_customer_id: customer.id
+      payment_gateway_customer_id: customer.id,
+      payment_gateway_subscription_id: subscription.id,
     )
 
     redirect_to root_path
