@@ -4,7 +4,7 @@
 
     <script
       src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-      data-key="pk_test_6bYuHRe4zpv5pT3oqzm0cmkU"
+      data-key="<%= Rails.application.credentials.stripe[:public_key] %>"
       data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
       data-locale="auto"
       data-zip-code="true"

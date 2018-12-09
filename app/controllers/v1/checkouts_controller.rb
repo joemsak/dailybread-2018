@@ -3,7 +3,17 @@ class V1::CheckoutsController < ApplicationController
 
   def create
     user = V1::User.find(decoded_jwt(jwt)[0]['id'])
-    user.update(payment_gateway_token: token)
+
+    customer = Stripe::Customer.create({
+      email: user.email,
+      source: token,
+    })
+
+    user.update(
+      payment_gateway_token: token,
+      payment_gateway_customer_id: customer.id
+    )
+
     redirect_to root_path
   end
 
