@@ -71,8 +71,6 @@ export default {
       const day = parts[2]
 
       data.madeOn = new Date([month, day, year].join("/"))
-    } else {
-      data.madeOn = data.madeOn.toLocaleDateString()
     }
 
     if (expensesIdx >= 0) {

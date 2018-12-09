@@ -105,11 +105,14 @@ export default {
           return [parts[2], parts[0], parts[1]].join("-")
         } else {
           const year = madeOn.getFullYear()
-          const month = madeOn.getMonth() + 1
+          let month = madeOn.getMonth() + 1
           let day = madeOn.getDate()
 
           if (day.toString().length === 1)
             day = `0${day}`
+
+          if (month.toString().length === 1)
+            month = `0${month}`
 
           return [year, month, day].join("-")
         }
