@@ -11,7 +11,8 @@ import router from 'routes'
 import store from 'store'
 
 function initApp (el) {
-  window.history.replaceState(null, null, window.location.pathname)
+  const path = window.location.pathname + window.location.hash
+  window.history.replaceState(null, null, path)
 
   new Vue({
     el,
