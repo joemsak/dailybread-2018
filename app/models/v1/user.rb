@@ -12,9 +12,9 @@ class V1::User < ApplicationRecord
     SecureRandom.base58(100)
   end
 
-  before_save -> {
+  before_create -> {
     self.email_confirmation_token_expires_at = Time.current + 4.hours
-  }, on: :create
+  }
 
   after_commit -> {
     expire_signup_token! if saved_change_to_status? && confirmed?
