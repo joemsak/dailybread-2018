@@ -6,7 +6,7 @@ RSpec.describe "Email Confirmations" do
 
     it "confirms pending users" do
       expect {
-        post v1_email_confirmations_path, params: {
+        post v1_email_confirmations_path(format: :json), params: {
           token: user.email_confirmation_token
         }
       }.to change {
@@ -18,7 +18,7 @@ RSpec.describe "Email Confirmations" do
       Timecop.travel(4.hours.from_now + 1.second)
 
       expect {
-        post v1_email_confirmations_path, params: {
+        post v1_email_confirmations_path(format: :json), params: {
           token: user.email_confirmation_token,
         }
       }.not_to change {
@@ -33,7 +33,7 @@ RSpec.describe "Email Confirmations" do
         this_user = FactoryBot.create(:user)
 
         expect {
-          post v1_email_confirmations_path, params: {
+          post v1_email_confirmations_path(format: :json), params: {
             token: this_user.email_confirmation_token,
           }
         }.to change {
@@ -62,7 +62,7 @@ RSpec.describe "Email Confirmations" do
         }]
       }
 
-      post v1_email_confirmations_path, params: {
+      post v1_email_confirmations_path(format: :json), params: {
         token: user.email_confirmation_token,
       }
 

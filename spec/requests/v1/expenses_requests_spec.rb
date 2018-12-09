@@ -11,7 +11,7 @@ RSpec.describe "Expenses" do
       FactoryBot.create(:expense, made_on: Date.new(2018, 12, 13))
 
       Timecop.freeze(Date.new(2018, 12, 14)) do
-        get v1_expenses_path, headers: {
+        get v1_expenses_path(format: :json), headers: {
           'x-access-token' => jwt
         }
 
@@ -21,7 +21,7 @@ RSpec.describe "Expenses" do
       end
 
       Timecop.freeze(Date.new(2018, 12, 13)) do
-        get v1_expenses_path, headers: {
+        get v1_expenses_path(format: :json), headers: {
           'x-access-token' => jwt
         }
 
@@ -44,7 +44,7 @@ RSpec.describe "Expenses" do
       }
 
       expect {
-        post v1_expenses_path, params: {
+        post v1_expenses_path(format: :json), params: {
           expense: {
             category: "Entertainment",
             name: "tequila night",
@@ -78,13 +78,13 @@ RSpec.describe "Expenses" do
 
       other = FactoryBot.create(:expense)
 
-      get v1_expense_path(other), headers: {
+      get v1_expense_path(other, format: :json), headers: {
         'x-access-token' => jwt
       }
 
       expect(response.status).to eq(404)
 
-      get v1_expense_path(expense), headers: {
+      get v1_expense_path(expense, format: :json), headers: {
         'x-access-token' => jwt
       }
 
@@ -108,7 +108,7 @@ RSpec.describe "Expenses" do
 
       other = FactoryBot.create(:expense)
 
-      patch v1_expense_path(other), params: {
+      patch v1_expense_path(other, format: :json), params: {
         expense: {
           category: "Goofing around",
           amount: 1_000_000,
@@ -121,7 +121,7 @@ RSpec.describe "Expenses" do
       expect(response.status).to eq(404)
 
       expect {
-        patch v1_expense_path(expense), params: {
+        patch v1_expense_path(expense, format: :json), params: {
           expense: {
             category: "Goofing around",
             amount: 1_000_000,
@@ -149,14 +149,14 @@ RSpec.describe "Expenses" do
       expense = FactoryBot.create(:expense, user: user)
       other = FactoryBot.create(:expense)
 
-      delete v1_expense_path(other), headers: {
+      delete v1_expense_path(other, format: :json), headers: {
         'x-access-token' => jwt
       }
 
       expect(response.status).to eq(404)
 
       expect {
-        delete v1_expense_path(expense), headers: {
+        delete v1_expense_path(expense, format: :json), headers: {
           'x-access-token' => jwt
         }
       }.to change {

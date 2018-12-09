@@ -11,7 +11,7 @@ RSpec.describe "Access Tokens" do
     it "ignores / 404s for expired tokens (for now)" do
       Timecop.travel(15.minutes.from_now + 1.second)
 
-      post v1_access_tokens_path, params: {
+      post v1_access_tokens_path(format: :json), params: {
         token: user.magic_signin_token,
       }
 
@@ -24,7 +24,7 @@ RSpec.describe "Access Tokens" do
         this_user.prepare_for_signin
 
         expect {
-          post v1_access_tokens_path, params: {
+          post v1_access_tokens_path(format: :json), params: {
             token: this_user.magic_signin_token,
           }
         }.to change {
@@ -47,7 +47,7 @@ RSpec.describe "Access Tokens" do
 
         allow(JWT).to receive(:decode).and_return([{ "exp" => 123456789 }])
 
-        post v1_access_tokens_path, params: {
+        post v1_access_tokens_path(format: :json), params: {
           token: user.magic_signin_token,
         }
       end
@@ -57,7 +57,7 @@ RSpec.describe "Access Tokens" do
 
     it "returns an expiry time in JSON" do
       Timecop.freeze do
-        post v1_access_tokens_path, params: {
+        post v1_access_tokens_path(format: :json), params: {
           token: user.magic_signin_token,
         }
 
@@ -69,7 +69,7 @@ RSpec.describe "Access Tokens" do
 
     it "returns a refresh token in JSON" do
       expect {
-        post v1_access_tokens_path, params: {
+        post v1_access_tokens_path(format: :json), params: {
           token: user.magic_signin_token,
         }
       }.to change {

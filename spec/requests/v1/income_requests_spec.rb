@@ -7,7 +7,7 @@ RSpec.describe "Income" do
   describe "POST /v1/income" do
     it "saves the income per pay period" do
       expect {
-        post v1_income_path, params: {
+        post v1_income_path(format: :json), params: {
           income: {
             amount: 2000,
             payroll_type: :semi_monthly_type2,
@@ -29,7 +29,7 @@ RSpec.describe "Income" do
       user_income = FactoryBot.create(:income, user: user)
       FactoryBot.create(:income)
 
-      get v1_income_path, headers: {
+      get v1_income_path(format: :json), headers: {
         'x-access-token' => jwt
       }
 

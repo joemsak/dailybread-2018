@@ -6,7 +6,7 @@ RSpec.describe "Access Token Refreshes" do
     let!(:jwt) { V1::JWTAuth.for(user) }
 
     it "ignores / 404s for incorrect tokens" do
-      post v1_access_token_refreshes_path, params: {
+      post v1_access_token_refreshes_path(format: :json), params: {
         token: "foo"
       }, headers: {
         'x-access-token' => jwt
@@ -18,7 +18,7 @@ RSpec.describe "Access Token Refreshes" do
     it "ignores / 401 for expired JWTs" do
       Timecop.travel(10.minutes + 1.second)
 
-      post v1_access_token_refreshes_path, params: {
+      post v1_access_token_refreshes_path(format: :json), params: {
         token: user.access_refresh_token,
       }, headers: {
         'x-access-token' => jwt
@@ -29,7 +29,7 @@ RSpec.describe "Access Token Refreshes" do
 
     it "regenerates the original refresh token" do
       expect {
-        post v1_access_token_refreshes_path, params: {
+        post v1_access_token_refreshes_path(format: :json), params: {
           token: user.access_refresh_token,
         }, headers: {
           'x-access-token' => jwt
@@ -51,7 +51,7 @@ RSpec.describe "Access Token Refreshes" do
           'HS256'
         ).and_call_original
 
-        post v1_access_token_refreshes_path, params: {
+        post v1_access_token_refreshes_path(format: :json), params: {
           token: user.access_refresh_token,
         }, headers: {
           'x-access-token' => jwt
@@ -63,7 +63,7 @@ RSpec.describe "Access Token Refreshes" do
 
     it "returns an expiry time in JSON" do
       Timecop.freeze do
-        post v1_access_token_refreshes_path, params: {
+        post v1_access_token_refreshes_path(format: :json), params: {
           token: user.access_refresh_token,
         }, headers: {
           'x-access-token' => jwt
@@ -74,7 +74,7 @@ RSpec.describe "Access Token Refreshes" do
     end
 
     it "returns the new refresh token in JSON" do
-      post v1_access_token_refreshes_path, params: {
+      post v1_access_token_refreshes_path(format: :json), params: {
         token: user.access_refresh_token,
       }, headers: {
         'x-access-token' => jwt

@@ -1,6 +1,4 @@
 class V1::CheckoutsController < ApplicationController
-  skip_after_action :attach_jwt_headers
-
   def create
     user = V1::User.find(decoded_jwt(jwt)[0]['id'])
 

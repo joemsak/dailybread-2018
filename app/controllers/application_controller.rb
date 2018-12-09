@@ -10,8 +10,9 @@ class ApplicationController < ActionController::Base
   after_action :attach_jwt_headers
 
   private
-  def attach_jwt_headers(user = current_user)
-    if user
+  def attach_jwt_headers(user = nil)
+    if request.format.json?
+      user ||= current_user
       jwt = V1::JWTAuth.for(user)
       decoded = decoded_jwt(jwt)
 
