@@ -15,17 +15,6 @@ RSpec.describe "Checkouts" do
       }
     end
 
-    it "adds the token to the current user" do
-      expect {
-        post v1_checkout_path, params: {
-          stripeToken: "tok_123",
-          jwt: V1::JWTAuth.for(user)
-        }
-      }.to change {
-        user.reload.payment_gateway_token
-      }.from(nil).to("tok_123")
-    end
-
     it "creates the customer" do
       post v1_checkout_path(format: :json), params: {
         stripe_token: "tok_123",
