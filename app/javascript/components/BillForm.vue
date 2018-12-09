@@ -64,7 +64,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 import Api from 'utils/api'
 
@@ -86,21 +86,13 @@ export default {
       'editingBill'
     ]),
 
+    ...mapGetters([
+      'totalAfterBillsAndExpenses',
+    ]),
+
     currentPayPeriod: {
       get() { return this.$store.state.currentPayPeriod },
       set(value) { this.$store.commit('currentPayPeriod', value) }
-    },
-
-    totalAfterBillsAndExpenses () {
-      let sum
-
-      if (this.currentPayPeriod == 1) {
-        sum = this.calculateSum(this.firstPeriodBills)
-      } else {
-        sum = this.calculateSum(this.secondPeriodBills)
-      }
-
-      return this.incomePerPeriod.amount - sum
     },
   },
 
@@ -143,10 +135,6 @@ export default {
       searchParams.set("payPeriod", value)
       const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString()
       history.pushState(null, '', newRelativePathQuery)
-    },
-
-    calculateSum (bills) {
-      return bills.reduce((sum, b) => sum + b.amount, 0)
     },
   },
 }

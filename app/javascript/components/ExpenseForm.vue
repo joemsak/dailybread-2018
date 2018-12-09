@@ -66,7 +66,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 import Api from 'utils/api'
 
@@ -90,6 +90,10 @@ export default {
       'firstPeriodBills',
       'secondPeriodBills',
       'editingExpense'
+    ]),
+
+    ...mapGetters([
+      'totalAfterBillsAndExpenses',
     ]),
 
     expenseMadeOn: {
@@ -122,22 +126,8 @@ export default {
           day = `0${day}`
 
         const localTimeDateString = `${month}/${day}/${year}`
-
         Vue.set(this.expense, 'madeOn', new Date(localTimeDateString))
       }
-    },
-
-    totalAfterBillsAndExpenses () {
-      let billSum
-
-      if (this.currentPayPeriod == 1) {
-        billSum = this.calculateSum(this.firstPeriodBills)
-      } else {
-        billSum = this.calculateSum(this.secondPeriodBills)
-      }
-
-      const expenseSum = this.calculateSum(this.expenses)
-      return this.incomePerPeriod.amount - billSum - expenseSum
     },
   },
 
@@ -180,10 +170,6 @@ export default {
         Vue.set(this.expense, 'madeOn', new Date())
         this.$refs.expenseEntryCategory.focus()
       })
-    },
-
-    calculateSum (items) {
-      return items.reduce((sum, i) => sum + i.amount, 0)
     },
   },
 }
