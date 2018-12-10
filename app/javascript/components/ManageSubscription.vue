@@ -1,11 +1,19 @@
 <template>
-  <button
-    id="subscribe-btn"
-    class="btn btn-primary"
-    @click.prevent="openCheckout"
-  >
-    Subscribe Today
-  </button>
+  <div v-if="currentSubscription.status === 'active'">
+    Your subscription is active. Thank you!
+    <p>Cancel link...</p>
+  </div>
+
+  <div v-else>
+    <p>Your subscription is {{ currentSubscription.status }}</p>
+    <button
+      id="subscribe-btn"
+      class="btn btn-primary"
+      @click.prevent="openCheckout"
+    >
+      Subscribe Today
+    </button>
+  </div>
 </template>
 
 <script>
@@ -15,7 +23,7 @@ import Api from 'utils/api'
 
 export default {
   computed: {
-    ...mapState(['currentEmail']),
+    ...mapState(['currentEmail', 'currentSubscription']),
 
     handler () {
       return StripeCheckout.configure({
@@ -52,10 +60,6 @@ export default {
 
     window.addEventListener('popstate', function() {
       this.handler.close()
-    })
-
-    Api.get('/current_user').then(json => {
-      this.$store.commit('currentEmail', json.email)
     })
   }
 }

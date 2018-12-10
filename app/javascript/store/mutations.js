@@ -9,6 +9,10 @@ export default {
     state.currentEmail = value
   },
 
+  currentSubscription(state, payload) {
+    Vue.set(state.currentSubscription, 'status', payload.status)
+  },
+
   currentPayPeriod(state, period) {
     state.currentPayPeriod = period
   },

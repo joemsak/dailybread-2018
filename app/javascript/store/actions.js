@@ -6,6 +6,7 @@ export default {
   async initApp ({ dispatch, commit }) {
     await dispatch('initIncome').then(() => {
       commit('appReady', true)
+      dispatch('initUser')
       dispatch('initPayPeriod')
       dispatch('initBills')
       dispatch('initExpenses')
@@ -27,6 +28,13 @@ export default {
           commit('incomePerPeriod', { id: null })
         }
       })
+  },
+
+  initUser ({ commit }) {
+    Api.get("/current_user").then(json => {
+      commit('currentEmail', json.email)
+      commit('currentSubscription', json.subscription)
+    })
   },
 
   initPayPeriod ({ commit }) {

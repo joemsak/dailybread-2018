@@ -2,6 +2,7 @@ export default {
   appReady: false,
 
   currentEmail: null,
+  currentSubscription: {},
 
   incomePerPeriod: {},
   currentPayPeriod: 1,
